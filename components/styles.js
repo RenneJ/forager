@@ -7,6 +7,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  credentialInput: {
+  	height: 40,
+
+  }
 })
 
 export default styles;
