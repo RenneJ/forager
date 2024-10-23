@@ -10,7 +10,7 @@ import Collections from './components/Collections';
 import Login from './components/Login';
 
 const Drawer = createDrawerNavigator();
-const db = getFirestore(app);
+//const db = getFirestore(app);
 export default function App() {
 	// TODO:
 	// 1. Routing in app

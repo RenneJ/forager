@@ -10,6 +10,9 @@ const styles = StyleSheet.create({
   credentialInput: {
   	height: 40,
 
+  },
+  warning: {
+  	color: "red",
   }
 })
 
