@@ -1,8 +1,8 @@
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth } from "firebase/auth";
 
 const auth = getAuth();
-const newUser = (email, password) => {
-	createUserWithEmailAndPassword(auth, email, password)
+export const newUser = async (email, password) => {
+	await createUserWithEmailAndPassword(auth, email, password)
 		.then((userCredential) => {
 			// Signed up
 			const user = userCredential.user;
@@ -11,8 +11,20 @@ const newUser = (email, password) => {
 		.catch((error) => {
 			const errorCode = error.code;
 			const errorMessage = error.message;
+			console.error(errorCode, errorMessage);
 			// ..
 		});
 }
 
-export default newUser;
+export const login = (email, password) => {
+	signInWithEmailAndPassword(auth, email, password)
+		.then((userCredential) => {
+			// Signed in
+			const user = userCredential.user;
+			// ...
+		})
+		.catch((error) => {
+			const errorCode = error.code;
+			const errorMessage = error.message;
+		});
+}

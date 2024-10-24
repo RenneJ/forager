@@ -8,6 +8,7 @@ import Profile from './components/Profile';
 import Forage from './components/Forage';
 import Collections from './components/Collections';
 import Login from './components/Login';
+import Signup from './components/Signup';
 
 const Drawer = createDrawerNavigator();
 //const db = getFirestore(app);
@@ -22,8 +23,8 @@ export default function App() {
 	// 5. Connect to firestore
   return (
 		<NavigationContainer>
-			<Drawer.Navigator initialRouteName="Login">
-				<Drawer.Screen name="Login" component={Login} />
+			<Drawer.Navigator initialRouteName="Signup">
+				<Drawer.Screen name="Signup" component={Signup} />
 				<Drawer.Screen name="Forage" component={Forage} />
 				<Drawer.Screen name="Collections" component={Collections} />
 				<Drawer.Screen name="Profile" component={Profile} />
