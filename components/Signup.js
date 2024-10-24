@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Button } from "react-native";
 import { useState }  from "react";
-import { newUser } from "../utils/authentication";
+import { newUser, auth } from "../utils/authentication";
 import {isValidEmail, isValidPassword} from "../utils/validation";
 import styles from "./styles";
 
@@ -18,11 +18,19 @@ export default function Signup(){
 
 	const handleSignUp = async (email, password) => {
 		// Invalid creds are discarded silently
-		//TODO: check if email alrdy in db, indicate async operation is taking place
+		//TODO: why not 1st click working??, indicate async operation is taking place
 		isValidEmail(email.email) ? setEmail({ ...email, valid: true }) : setEmail({ ...email, alert: true });
 		isValidPassword(password.password) ? setPassword({ ...password, valid: true }) : setPassword({ ...password, alert: true });
 		if (email.valid && password.valid) {
-			await newUser(email.email, password.password);
+			// Successful signing up also logs new user in
+			await newUser(email.email, password.password)
+				.then(console.log(auth.currentUser.email))
+				.catch((error) => {
+					const errorCode = error.code;
+					const errorMessage = error.message;
+					console.error(errorCode, errorMessage);
+					// ..
+				});
 		}
 	}
 	return(
