@@ -11,10 +11,11 @@ import Forage from './components/Forage';
 import Collections from './components/Collections';
 import Login from './components/Login';
 import Signup from './components/Signup';
-import { auth } from './utils/authentication';
+//import { auth } from './utils/authentication';
 import styles from "./components/styles";
 
 const Drawer = createDrawerNavigator();
+const auth = getAuth();
 const currentUser = auth.currentUser;
 //const db = getFirestore(app);
 export default function App() {

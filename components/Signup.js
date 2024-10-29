@@ -1,37 +1,44 @@
 import { View, Text, TextInput, Button } from "react-native";
 import { useState }  from "react";
-import { newUser, auth } from "../utils/authentication";
+import { auth } from "../firebaseconfig";
+import { newUser, logOut } from "../utils/authentication";
 import {isValidEmail, isValidPassword} from "../utils/validation";
 import styles from "./styles";
 
 export default function Signup(){
 	const [email, setEmail] = useState({
 		email: "",
-		valid: false,
 		alert: false
 	});
 	const [password, setPassword] = useState({
 		password: "",
-		valid: false,
 		alert: false,
 	});
 
 	const handleSignUp = async (email, password) => {
-		// Invalid creds are discarded silently
 		//TODO: why not 1st click working??, indicate async operation is taking place
-		isValidEmail(email.email) ? setEmail({ ...email, valid: true }) : setEmail({ ...email, alert: true });
-		isValidPassword(password.password) ? setPassword({ ...password, valid: true }) : setPassword({ ...password, alert: true });
-		if (email.valid && password.valid) {
-			// Successful signing up also logs new user in
-			await newUser(email.email, password.password)
-				.then(console.log(auth.currentUser.email))
-				.catch((error) => {
-					const errorCode = error.code;
-					const errorMessage = error.message;
-					console.error(errorCode, errorMessage);
-					// ..
-				});
+		//validateCreds();
+		if (isValidEmail(email.email) && isValidPassword(password.password)) {
+			// Successful sign up also logs new user in
+				await newUser(email.email, password.password)
+					.catch((error) => {
+						const errorCode = error.code;
+						const errorMessage = error.message;
+						console.error(errorCode, errorMessage);
+						// ..
+					})
+					.finally(console.log("31", auth.currentUser))
 		}
+		if(!isValidEmail(email.email)) {
+			setEmail({ ...email, alert: true });
+		}
+		if(!isValidPassword(password.password)){
+			setPassword({ ...password, alert: true });
+		}
+	}
+	const handleLogOut = async () => {
+		console.log("40", auth.currentUser);
+		await logOut();
 	}
 	return(
 		<View style={styles.container}>
@@ -68,6 +75,10 @@ export default function Signup(){
 			<Button
 				title={"Sign up"}
 				onPress={() => handleSignUp(email, password)}
+			/>
+			<Button
+				title={"Log out"}
+				onPress={() => handleLogOut()}
 			/>
 		</View>
 	)
