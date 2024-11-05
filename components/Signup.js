@@ -20,14 +20,14 @@ export default function Signup(){
 		//validateCreds();
 		if (isValidEmail(email.email) && isValidPassword(password.password)) {
 			// Successful sign up also logs new user in
-				await newUser(email.email, password.password)
-					.catch((error) => {
-						const errorCode = error.code;
-						const errorMessage = error.message;
-						console.error(errorCode, errorMessage);
+			await newUser(email.email, password.password)
+				.then(console.log("signup 24", auth.currentUser))
+				.catch((error) => {
+					const errorCode = error.code;
+					const errorMessage = error.message;
+					console.error(errorCode, errorMessage);
 						// ..
-					})
-					.finally(console.log("31", auth.currentUser))
+				})
 		}
 		if(!isValidEmail(email.email)) {
 			setEmail({ ...email, alert: true });
@@ -37,8 +37,11 @@ export default function Signup(){
 		}
 	}
 	const handleLogOut = async () => {
-		console.log("40", auth.currentUser);
-		await logOut();
+		await logOut()
+			.then(console.log("40", auth.currentUser))
+			.catch((error) => {
+				console.log(error)
+			})
 	}
 	return(
 		<View style={styles.container}>

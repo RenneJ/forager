@@ -7,6 +7,7 @@ export const newUser = async (email, password) => {
 			// Signed up
 			const user = userCredential.user;
 			// ...
+			console.log(user);
 		})
 		.catch((error) => {
 			const errorCode = error.code;
@@ -30,10 +31,9 @@ export const logIn = async (email, password) => {
 }
 
 export const logOut = async () => {
-
-await	signOut(auth).then(() => {
-  // Sign-out successful.
-}).catch((error) => {
-  // An error happened.
-}).finally(console.log(auth));
+	await	signOut(auth).then(() => {
+	  // Sign-out successful.
+	}).catch((error) => {
+	  // An error happened.
+	}).finally(console.log(auth));
 }
