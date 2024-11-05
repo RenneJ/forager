@@ -5,7 +5,7 @@ import { newUser, logOut } from "../utils/authentication";
 import {isValidEmail, isValidPassword} from "../utils/validation";
 import styles from "./styles";
 
-export default function Signup(){
+export default function Signup({navigation}){
 	const [email, setEmail] = useState({
 		email: "",
 		alert: false
@@ -21,13 +21,18 @@ export default function Signup(){
 		if (isValidEmail(email.email) && isValidPassword(password.password)) {
 			// Successful sign up also logs new user in
 			await newUser(email.email, password.password)
-				.then(console.log("signup 24", auth.currentUser))
+				//.then(console.log("signup 24", auth.currentUser))
 				.catch((error) => {
 					const errorCode = error.code;
 					const errorMessage = error.message;
 					console.error(errorCode, errorMessage);
-						// ..
-				})
+					// ..
+				});
+			// redirect to forage view after successful login
+			console.log("signup 24", auth.currentUser);
+			if(auth.currentUser){
+				navigation.navigate("Forage")
+			}
 		}
 		if(!isValidEmail(email.email)) {
 			setEmail({ ...email, alert: true });
