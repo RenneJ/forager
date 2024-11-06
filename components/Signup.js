@@ -1,9 +1,10 @@
 import { View, Text, TextInput, Button } from "react-native";
-import { useState }  from "react";
-import { auth } from "../firebaseconfig";
+import { useState, useContext }  from "react";
+import { auth, storage, secureStore } from "../firebaseconfig";
 import { newUser, logOut } from "../utils/authentication";
 import {isValidEmail, isValidPassword} from "../utils/validation";
 import styles from "./styles";
+import { AuthContext } from "../utils/context";
 
 export default function Signup({navigation}){
 	const [email, setEmail] = useState({
@@ -15,23 +16,17 @@ export default function Signup({navigation}){
 		alert: false,
 	});
 
+	const { signUp } = useContext(AuthContext);
+
 	const handleSignUp = async (email, password) => {
 		//TODO: why not 1st click working??, indicate async operation is taking place
 		//validateCreds();
 		if (isValidEmail(email.email) && isValidPassword(password.password)) {
 			// Successful sign up also logs new user in
-			await newUser(email.email, password.password)
-				//.then(console.log("signup 24", auth.currentUser))
-				.catch((error) => {
-					const errorCode = error.code;
-					const errorMessage = error.message;
-					console.error(errorCode, errorMessage);
-					// ..
-				});
+			await signUp(email.email, password.password);
 			// redirect to forage view after successful login
-			console.log("signup 24", auth.currentUser);
 			if(auth.currentUser){
-				navigation.navigate("Forage")
+				//navigation.navigate("Forage")
 			}
 		}
 		if(!isValidEmail(email.email)) {
@@ -43,7 +38,7 @@ export default function Signup({navigation}){
 	}
 	const handleLogOut = async () => {
 		await logOut()
-			.then(console.log("40", auth.currentUser))
+			.then(console.log(await secureStore.getItemAsync("userToken")))
 			.catch((error) => {
 				console.log(error)
 			})

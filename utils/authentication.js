@@ -6,7 +6,7 @@ export const newUser = async (email, password) => {
 		.then((userCredential) => {
 			// Signed up
 			const user = userCredential.user;
-			// ...
+			console.log("authentication 9", user);
 		})
 		.catch((error) => {
 			const errorCode = error.code;

@@ -13,6 +13,10 @@ const styles = StyleSheet.create({
   },
   warning: {
   	color: "red",
+  },
+  accessLogo: {
+  	height: 150,
+   	width: 150,
   }
 })
 
