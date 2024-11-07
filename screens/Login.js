@@ -2,7 +2,7 @@ import { View, Text, TextInput, Button } from "react-native";
 import { useState }  from "react";
 import newUser from "../utils/authentication";
 import {isValidEmail, isValidPassword} from "../utils/validation";
-import styles from "./styles";
+import styles from "../styles";
 
 export default function Login(){
 	const [email, setEmail] = useState({

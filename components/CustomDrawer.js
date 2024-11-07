@@ -1,5 +1,6 @@
-import { DrawerContentScrollView, DrawerItemList, createDrawerNavigator } from '@react-navigation/drawer';
+import { DrawerContentScrollView, DrawerItemList, DrawerItem, createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
+import { Text } from "react-native";
 import Access from "../screens/Access";
 import Collections from '../screens/Collections';
 import Forage from '../screens/Forage';
@@ -17,7 +18,7 @@ export default function CustomDrawer(props){
 						<Drawer.Screen name="Signup" component={Signup} />
 				</Drawer.Navigator>
 			) : (
-				<Drawer.Navigator initialRouteName="Forage">
+				<Drawer.Navigator initialRouteName="Forage" drawerContent={props => <CustomDrawerContent {...props} />}>
 					<Drawer.Screen name="Forage" component={Forage} />
 					<Drawer.Screen name="Collections" component={Collections} />
 					<Drawer.Screen name="Profile" component={Profile} />
@@ -30,7 +31,10 @@ export default function CustomDrawer(props){
 function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
+	    <DrawerItemList {...props} />
+	      <DrawerItem label={"Logout"}
+	        onPress={() => alert('Logged out')}
+	      />
     </DrawerContentScrollView>
   );
 }

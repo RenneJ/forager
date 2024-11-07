@@ -3,7 +3,7 @@ import { useState, useContext }  from "react";
 import { auth, storage, secureStore } from "../firebaseconfig";
 import { newUser, logOut } from "../utils/authentication";
 import {isValidEmail, isValidPassword} from "../utils/validation";
-import styles from "./styles";
+import styles from "../styles";
 import { AuthContext } from "../utils/context";
 
 export default function Signup({navigation}){

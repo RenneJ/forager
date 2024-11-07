@@ -97,7 +97,7 @@ export default function App() {
 	return (
 		<AuthContext.Provider value={authContext}>
 			<CustomDrawer state={state} />
-				<StatusBar style="auto" />
+			<StatusBar style="auto" />
 		</AuthContext.Provider>
   );
 }

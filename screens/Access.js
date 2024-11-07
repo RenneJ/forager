@@ -2,7 +2,7 @@ import { View, Button, Image, Text } from "react-native";
 import { auth } from "../firebaseconfig";
 import Login from "./Login";
 import Signup from "./Signup";
-import styles from "./styles";
+import styles from "../styles";
 
 export default function Access({navigation}){
 	return(
