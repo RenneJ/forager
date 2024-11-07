@@ -1,22 +1,11 @@
 // app needs to be imported first or at least before auth fro ./utils/authentication
-import { auth, storage, secureStore } from "./firebaseconfig";
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { auth, secureStore } from "./firebaseconfig";
 import { useReducer, useMemo, useEffect } from "react";
 import { StatusBar } from 'expo-status-bar';
-import Access from "./screens/Access";
-import Collections from './screens/Collections';
-import Forage from './screens/Forage';
-import Profile from './screens/Profile';
-import Signup from './screens/Signup';
 import { AuthContext } from "./utils/context";
 import { newUser, logOut } from "./utils/authentication";
+import CustomDrawer from "./components/CustomDrawer";
 
-const Drawer = createDrawerNavigator();
-const AccessStack = createNativeStackNavigator();
-const localStorage = storage;
-//const db = getFirestore(app);
 export default function App() {
 	// TODO:
 	// get accesstoken from firestore
@@ -107,25 +96,8 @@ export default function App() {
 
 	return (
 		<AuthContext.Provider value={authContext}>
-			< NavigationContainer >
-
-			{state.userToken == null ? (
-				<Drawer.Navigator initialRouteName="Access">
-
-						<Drawer.Screen name="Access" component={Access} options={{headerShown: false}}/>
-						<Drawer.Screen name="Signup" component={Signup} />
-
-				</Drawer.Navigator>
-			) : (
-				<Drawer.Navigator initialRouteName="Forage">
-					<Drawer.Screen name="Forage" component={Forage} />
-					<Drawer.Screen name="Collections" component={Collections} />
-					<Drawer.Screen name="Profile" component={Profile} />
-				</Drawer.Navigator>
-			)
-			}
+			<CustomDrawer state={state} />
 				<StatusBar style="auto" />
-			</NavigationContainer >
 		</AuthContext.Provider>
   );
 }
