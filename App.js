@@ -5,11 +5,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useReducer, useMemo, useEffect } from "react";
 import { StatusBar } from 'expo-status-bar';
-import Access from "./components/Access";
-import Collections from './components/Collections';
-import Forage from './components/Forage';
-import Profile from './components/Profile';
-import Signup from './components/Signup';
+import Access from "./screens/Access";
+import Collections from './screens/Collections';
+import Forage from './screens/Forage';
+import Profile from './screens/Profile';
+import Signup from './screens/Signup';
 import { AuthContext } from "./utils/context";
 import { newUser, logOut } from "./utils/authentication";
 
@@ -56,7 +56,7 @@ export default function App() {
       let refreshToken;
 
       try {
-        refreshToken = await SecureStorage.getItemAsync('refreshToken');
+        refreshToken = await secureStore.getItemAsync('refreshToken');
       } catch (e) {
         // Restoring token failed
       }
