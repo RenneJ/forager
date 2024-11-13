@@ -38,9 +38,9 @@ export default function Signup({navigation}){
 	}
 	const handleLogOut = async () => {
 		await logOut()
-			.then(console.log(await secureStore.getItemAsync("userToken")))
+			.then(console.log("sign41",await secureStore.getItemAsync("userToken")))
 			.catch((error) => {
-				console.log(error)
+				console.log("sign43", error)
 			})
 	}
 	return(

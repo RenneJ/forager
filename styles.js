@@ -17,7 +17,10 @@ const styles = StyleSheet.create({
   accessLogo: {
   	height: 150,
    	width: 150,
-  }
+  },
+  drawerLogout: {
+
+  },
 })
 
 export default styles;

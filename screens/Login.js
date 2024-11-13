@@ -1,5 +1,6 @@
-import { View, Text, TextInput, Button } from "react-native";
+import { View, Text, TextInput, Button, Image } from "react-native";
 import { useState }  from "react";
+import { auth } from "../firebaseconfig";
 import newUser from "../utils/authentication";
 import {isValidEmail, isValidPassword} from "../utils/validation";
 import styles from "../styles";
@@ -27,13 +28,11 @@ export default function Login(){
 	}
 	return(
 		<View style={styles.container}>
-			<View>
-				<Text>At least: 1 lowercase character</Text>
-				<Text>At least: 1 uppercase character</Text>
-				<Text>At least: 1 number</Text>
-				<Text>At least: 1 special character</Text>
-				<Text>At least: 6 charcter long</Text>
-			</View>
+			<Text>{auth.currentUser ? auth.currentUser.email : "Null"}</Text>
+			<Image
+				source={require("../assets/logo.png")}
+				style={styles.accessLogo}
+			 />
 			<TextInput style={ styles.credentialInput}
 				placeholder={"Email"}
 				keyboardType={"email-address"}

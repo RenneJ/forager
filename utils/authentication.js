@@ -31,8 +31,8 @@ export const logIn = async (email, password) => {
 
 export const logOut = async () => {
 	await	signOut(auth).then(() => {
-	  // Sign-out successful.
+	  console.log("Logout succesful")
 	}).catch((error) => {
-	  // An error happened.
+	  console.log("ath35", error)// An error happened.
 	}).finally(console.log(auth));
 }

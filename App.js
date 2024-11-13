@@ -1,9 +1,9 @@
 // app needs to be imported first or at least before auth fro ./utils/authentication
-import { auth, secureStore } from "./firebaseconfig";
+import { auth, secureStore, refreshSessionUrl } from "./firebaseconfig";
 import { useReducer, useMemo, useEffect } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { AuthContext } from "./utils/context";
-import { newUser, logOut } from "./utils/authentication";
+import { newUser, logOut, saveToken } from "./utils/authentication";
 import CustomDrawer from "./components/CustomDrawer";
 
 export default function App() {
@@ -42,13 +42,24 @@ export default function App() {
 	useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let refreshToken;
-
-      try {
-        refreshToken = await secureStore.getItemAsync('refreshToken');
-      } catch (e) {
-        // Restoring token failed
-      }
+			let refreshToken = await secureStore.getItemAsync("refreshToken");
+			console.log("app 46", refreshToken);
+			if(refreshToken){
+      	try {
+					await fetch(refreshSessionUrl, {
+						method: "POST",
+						body: JSON.stringify({
+							grant_type: "refresh_token",
+							refresh_token: refreshToken,
+						}),
+						headers: { "Content-Type": "application/json" },
+					})
+          .then(response => response.json())
+          .then(data => secureStore.setItemAsync("refreshToken", data.refresh_token))
+	      } catch (e) {
+	        console.log("App 63", e)
+	      }
+			}
 
       // After restoring token, we may need to validate it in production apps
 
@@ -70,7 +81,11 @@ export default function App() {
       // refreshToken to get new accessToken
       dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
     },
-    signOut: () => dispatch({ type: 'SIGN_OUT' }),
+		signOut: async () => {
+			await secureStore.deleteItemAsync("refreshToken");
+			logOut();
+			dispatch({ type: 'SIGN_OUT' });
+		},
 		signUp: async (email, password) => {
 			// In a production app, we need to send user data to server and get a token
 			// We will also need to handle errors if sign up failed
@@ -79,10 +94,10 @@ export default function App() {
 			let refreshToken;
 			await newUser(email, password)
 				//.then(console.log("signup 24", auth.currentUser))
-				.then(() => {
+				.then(async () => {
 					refreshToken = auth.currentUser.refreshToken;
-					secureStore.setItemAsync("refreshToken", refreshToken);
-					console.log("App 95", refreshToken)
+					await secureStore.setItemAsync("refreshToken", refreshToken);
+					console.log("App 100", refreshToken)
 				})
 				.catch((error) => {
 					const errorCode = error.code;
@@ -90,6 +105,8 @@ export default function App() {
 					console.error(errorCode, errorMessage);
 					// ..
 				});
+			//let testToken = await secureStore.getItemAsync("refreshToken");
+			//if (testToken) { console.log("110", testToken) };
       dispatch({ type: 'SIGN_IN', token: refreshToken });
     },
   }), []);
