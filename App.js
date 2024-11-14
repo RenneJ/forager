@@ -1,10 +1,11 @@
 // app needs to be imported first or at least before auth fro ./utils/authentication
-import { auth, secureStore, refreshSessionUrl } from "./firebaseconfig";
+import { secureStore, refreshSessionUrl } from "./firebaseconfig";
 import { useReducer, useMemo, useEffect } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { AuthContext } from "./utils/context";
 import { newUser, logOut, saveToken } from "./utils/authentication";
 import CustomDrawer from "./components/CustomDrawer";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function App() {
 	// TODO:
@@ -41,33 +42,20 @@ export default function App() {
 
 	useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
-    const bootstrapAsync = async () => {
-			let refreshToken = await secureStore.getItemAsync("refreshToken");
-			console.log("app 46", refreshToken);
-			if(refreshToken){
-      	try {
-					await fetch(refreshSessionUrl, {
-						method: "POST",
-						body: JSON.stringify({
-							grant_type: "refresh_token",
-							refresh_token: refreshToken,
-						}),
-						headers: { "Content-Type": "application/json" },
-					})
-          .then(response => response.json())
-          .then(data => secureStore.setItemAsync("refreshToken", data.refresh_token))
-	      } catch (e) {
-	        console.log("App 63", e)
+			const auth = getAuth();
+			let idToken;
+			onAuthStateChanged(auth, async (user) => {
+	      if (user) {
+	        // User is signed in, see docs for a list of available properties
+	        // https://firebase.google.com/docs/reference/js/auth.user
+	        const uid = user.uid;
+	        idToken = await user.getIdToken();
+					dispatch({ type: 'RESTORE_TOKEN', token: idToken });
+	      } else {
+	      	idToken = null;
 	      }
-			}
-
-      // After restoring token, we may need to validate it in production apps
-
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
-      dispatch({ type: 'RESTORE_TOKEN', token: refreshToken });
-    };
-    bootstrapAsync();
+    	});
+			dispatch({ type: 'RESTORE_TOKEN', token: idToken });
   }, []);
 
 	const authContext = useMemo(() => ({
@@ -81,9 +69,13 @@ export default function App() {
       // refreshToken to get new accessToken
       dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
     },
-		signOut: async () => {
-			await secureStore.deleteItemAsync("refreshToken");
-			logOut();
+		signOut: () => {
+			//await secureStore.deleteItemAsync("refreshToken");
+			try {
+				logOut();
+			} catch(error){
+				console.log("app77", error)
+			}
 			dispatch({ type: 'SIGN_OUT' });
 		},
 		signUp: async (email, password) => {
@@ -91,13 +83,14 @@ export default function App() {
 			// We will also need to handle errors if sign up failed
 			// After getting token, we need to persist the token using `SecureStore`
 			// In the example, we'll use a dummy token
-			let refreshToken;
+			let idToken;
+			const auth = getAuth();
 			await newUser(email, password)
 				//.then(console.log("signup 24", auth.currentUser))
 				.then(async () => {
-					refreshToken = auth.currentUser.refreshToken;
-					await secureStore.setItemAsync("refreshToken", refreshToken);
-					console.log("App 100", refreshToken)
+					idToken = await auth.currentUser.getIdToken();
+					//await secureStore.setItemAsync("refreshToken", refreshToken);
+					console.log("App 100", idToken)
 				})
 				.catch((error) => {
 					const errorCode = error.code;
@@ -107,7 +100,7 @@ export default function App() {
 				});
 			//let testToken = await secureStore.getItemAsync("refreshToken");
 			//if (testToken) { console.log("110", testToken) };
-      dispatch({ type: 'SIGN_IN', token: refreshToken });
+      dispatch({ type: 'SIGN_IN', token: idToken });
     },
   }), []);
 

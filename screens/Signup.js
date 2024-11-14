@@ -17,7 +17,6 @@ export default function Signup({navigation}){
 	});
 
 	const { signUp } = useContext(AuthContext);
-
 	const handleSignUp = async (email, password) => {
 		//TODO: why not 1st click working??, indicate async operation is taking place
 		//validateCreds();
@@ -46,11 +45,7 @@ export default function Signup({navigation}){
 	return(
 		<View style={styles.container}>
 			<View>
-				<Text>At least: 1 lowercase character</Text>
-				<Text>At least: 1 uppercase character</Text>
-				<Text>At least: 1 number</Text>
-				<Text>At least: 1 special character</Text>
-				<Text>At least: 6 charcter long</Text>
+				<Text></Text>
 			</View>
 			<TextInput style={ styles.credentialInput}
 				placeholder={"Email"}

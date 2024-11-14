@@ -21,7 +21,7 @@ function CustomDrawerContent(props) {
 	const handleLogOut = () => {
 		signOut();
 	}
-
+	// TODO: Loading indicator, isLoading alrdy passed in props
   return (
     <DrawerContentScrollView {...props}>
 	    <DrawerItemList {...props} />
