@@ -1,7 +1,8 @@
-import { View, Text, Button, TextInput } from "react-native";
-import { useState } from 'react';
+import { View, Text, Button, TextInput, FlatList } from "react-native";
+import { useState, useEffect } from 'react';
 import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
+import { storeBasket, storeArea, clear, isStarted } from "../utils/localstorage";
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
 
 const database = getDatabase(app);
@@ -14,27 +15,90 @@ export default function Forage({navigation}){
 	// TODO: save uid locally
 	const [area, setArea] = useState("");
 	const [started, setStarted] = useState(false);
-	const [basket, setBasket] = useState({});
-	const handleSave = () => {
-		push(ref(database, "collection/" + auth.currentUser.uid), {
-			time: nowFormat,
-			area: "Nuuksio",
-			basket: "basket"
-		});
+	const [basket, setBasket] = useState([]); //list of items here i.e. what a person puts in their basket
+	const [item, setItem] = useState({
+		name: "",
+		lat: "",
+		lon: ""
+	});
+
+
+	// TEMP HERE
+	const clearStorage = () => {
+		clear("basket");
+		clear("area")
+		setBasket([]);
+		setStarted(false)
 	}
 
-	const handleDate = () => {
-		console.log(nowFormat)
+	const handleBasketAdd = () => {
+		setBasket([...basket, item]);
 	}
+
+	const handleStart = () => {
+		setStarted(true);
+		storeArea("area", area);
+	}
+
+	// Switch Screen, foraging trip is still saved locally
+	const handleEnd = () => {
+		setStarted(false);
+		navigation.navigate("Collections");
+	}
+	// Update local storage every time an item is added to basket.
+	useEffect(() => {
+		try {
+			storeBasket("basket", item)
+		}catch (error) {
+			console.log(error);
+		}finally {
+			setItem({...item, name: ""});
+		}
+	}, [basket])
+
+	// check if there is ongoing foraging i.e. area is set
+	useEffect(() => {
+		try {
+			setStarted(isStarted("area"))
+		} catch(error) {
+			console.log(error)
+		}
+		}, [])
+
 	return(
 		<View style={styles.container}>
 			<Text>FORAGE PAGE</Text>
 			<Text>Current user: { auth.currentUser?.email }</Text>
-			<View styles={styles.container}>
-				<TextInput placeholder="Area"/>
-			</View>
-			<Button title="Test Save" onPress={handleSave} />
-			<Button title="Test Date" onPress={handleDate} />
+			{started ?
+				<View>
+					<TextInput
+						placeholder="Mushroom name"
+						value={item.name}
+						onChangeText={text => setItem({ ...item, name: text })}
+					/>
+					<Text>MAP HERE, SELECT COORDS, PIN ON MAP</Text>
+					<Button title="Add to basket" onPress={handleBasketAdd} />
+					<Button title="End Trip" onPress={handleEnd} />
+					<Button title="Clear Storage" onPress={clearStorage} />
+					<FlatList
+					data={basket}
+					renderItem={({item}) =>
+						<Text>{ item.name }</Text>
+					}
+					/>
+
+				</View>
+				:
+				<View styles={styles.container}>
+					<TextInput
+						placeholder="Area"
+						value={area}
+						onChangeText={text => setArea(text)}
+					/>
+					<Button title="Start Foraging" onPress={handleStart} />
+
+				</View> }
+
 		</View>
 	)
 }
