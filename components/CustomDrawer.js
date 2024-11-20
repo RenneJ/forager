@@ -44,9 +44,9 @@ export default function CustomDrawer(props){
 						<Stack.Screen name="Signup" component={Signup} />
 				</Stack.Navigator>
 			) : (
-				<Drawer.Navigator initialRouteName="Forage" drawerContent={props => <CustomDrawerContent {...props} />}>
-					<Drawer.Screen name="Forage" component={Forage} />
+				<Drawer.Navigator initialRouteName="Collections" drawerContent={props => <CustomDrawerContent {...props} />}>
 					<Drawer.Screen name="Collections" component={Collections} />
+					<Drawer.Screen name="Forage" component={Forage} />
 					<Drawer.Screen name="Profile" component={Profile} />
 				</Drawer.Navigator>
 			)}

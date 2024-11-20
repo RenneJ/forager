@@ -1,11 +1,12 @@
 // app needs to be imported first or at least before auth fro ./utils/authentication
-import { secureStore, refreshSessionUrl } from "./firebaseconfig";
+import { app } from "./firebaseconfig";
 import { useReducer, useMemo, useEffect } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { AuthContext } from "./utils/context";
 import { newUser, logOut, saveToken } from "./utils/authentication";
 import CustomDrawer from "./components/CustomDrawer";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 
 export default function App() {
 	// TODO:
