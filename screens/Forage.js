@@ -59,10 +59,10 @@ export default function Forage({navigation}){
 	// check if there is ongoing foraging i.e. area is set
 	useEffect(() => {
 		try {
-			setStarted(isStarted("area"))
+			started = async () => await isStarted("area")
 		} catch(error) {
 			console.log(error)
-		}
+		} finally{console.log("f65", started)}
 		}, [])
 
 	return(
@@ -71,6 +71,7 @@ export default function Forage({navigation}){
 			<Text>Current user: { auth.currentUser?.email }</Text>
 			{started ?
 				<View>
+					<Text>{started}</Text>
 					<TextInput
 						placeholder="Mushroom name"
 						value={item.name}

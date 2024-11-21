@@ -2,22 +2,20 @@ import { auth, app, storage } from "../firebaseconfig";
 
 
 //key = "basket", value = {name, lat, lon}
-export const storeBasket = async (key, value,) => {
+export const storeBasket = async (key, value) => {
 	if (value.name == "") {
 		console.log("forage started");
 	} else {
 		var objectList = [];
 
-		const storedValue = await storage.getItem(key)
-			.catch((error) => {
-				console.log(error);
-			})
-
-		const object = JSON.parse(storedValue);
+		// Null when trying to add first item
+		const object = await parseStoredValue(key);
 
 		if(object){
+			// Items 2nd and ->
 			objectList = [...object, value];
 		} else {
+		// First item added to basket
 			objectList = [value];
 		}
 
@@ -43,10 +41,21 @@ export const storeArea = async (key, value) => {
 
 export const isStarted = async(key) => {
 	if (await storage.getItem(key)) {
-		console.log(await storage.getAllKeys())
+		console.log(await storage.getItem(key))
 		return true;
 	}
 	return false;
+}
+
+export const parseStoredValue = async (key) => {
+	let storedValue;
+	try {
+		storedValue = await storage.getItem(key);
+	} catch(error){
+		console.log(error);
+	}
+	const object = JSON.parse(storedValue);
+	return object;
 }
 
 export const clear = async (key) => {
