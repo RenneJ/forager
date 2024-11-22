@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
 	container: {
@@ -21,6 +21,10 @@ const styles = StyleSheet.create({
   drawerLogout: {
 
   },
+  map:{
+  	width: Dimensions.get('window').width * 0.9,
+   	height: Dimensions.get('window').height * 0.5,
+  }
 })
 
 export default styles;

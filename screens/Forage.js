@@ -1,9 +1,10 @@
 import { View, Text, Button, TextInput, FlatList } from "react-native";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
 import { storeBasket, storeArea, clear, isStarted } from "../utils/localstorage";
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
+import SpotMarker from "../components/SpotMarker";
 
 const database = getDatabase(app);
 const now = new Date(Date.now());
@@ -16,28 +17,42 @@ export default function Forage({navigation}){
 	const [area, setArea] = useState("");
 	const [started, setStarted] = useState(false);
 	const [basket, setBasket] = useState([]); //list of items here i.e. what a person puts in their basket
-	const [item, setItem] = useState({
+	const [name, setName] = useState("");
+	// Pass coordinates here from child component (SpotMarker)
+	// to avoid too many re-renders (infinite loop)
+	const ref = useRef({
 		name: "",
 		lat: "",
 		lon: ""
 	});
-
+	const changeRef=(value)=>{ ref.current=value }
 
 	// TEMP HERE
 	const clearStorage = () => {
 		clear("basket");
 		clear("area")
 		setBasket([]);
-		setStarted(false)
+		setStarted(false);
+		changeRef(null);
 	}
 
 	const handleBasketAdd = () => {
-		setBasket([...basket, item]);
+		changeRef({...ref.current, name: name})
+		setBasket([...basket, ref.current]);
+		//changeRef(null);
 	}
 
 	const handleStart = () => {
 		setStarted(true);
 		storeArea("area", area);
+	}
+
+	const handleCoordinateChange = (lat, lon) => {
+		changeRef({ lat: lat, lon:lon });
+		//changeRef({ ...ref, lon: lon });
+		if(ref.current){
+			console.log("53", ref.current);
+		}
 	}
 
 	// Switch Screen, foraging trip is still saved locally
@@ -48,11 +63,13 @@ export default function Forage({navigation}){
 	// Update local storage every time an item is added to basket.
 	useEffect(() => {
 		try {
-			storeBasket("basket", item)
+			if (Object.values(ref.current).every((value) => value != "")) {
+				storeBasket("basket", ref.current)
+			}
 		}catch (error) {
 			console.log(error);
 		}finally {
-			setItem({...item, name: ""});
+			setName("");
 		}
 	}, [basket])
 
@@ -70,14 +87,13 @@ export default function Forage({navigation}){
 			<Text>FORAGE PAGE</Text>
 			<Text>Current user: { auth.currentUser?.email }</Text>
 			{started ?
-				<View>
-					<Text>{started}</Text>
+				<View style={styles.container}>
 					<TextInput
 						placeholder="Mushroom name"
-						value={item.name}
-						onChangeText={text => setItem({ ...item, name: text })}
+						value={name}
+						onChangeText={text => setName(text)}
 					/>
-					<Text>MAP HERE, SELECT COORDS, PIN ON MAP</Text>
+					<SpotMarker setCoordinates={handleCoordinateChange} />
 					<Button title="Add to basket" onPress={handleBasketAdd} />
 					<Button title="End Trip" onPress={handleEnd} />
 					<Button title="Clear Storage" onPress={clearStorage} />

@@ -12,6 +12,8 @@ const nowFormat = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
 export default function Collections(){
 	// TODO: list previous trips (sort by time: desc)
 	// TODO: "Go Forage" -> Forage
+
+	// TODO: if wifi do handleSync
 	const handleSync = async () => {
 		try {
 			const area = await storage.getItem("area");
