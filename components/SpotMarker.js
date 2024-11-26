@@ -35,7 +35,6 @@ export default function SpotMarker({setCoordinates}){
 						coordinate={{ latitude: markerCoordinate.latitude, longitude: markerCoordinate.longitude}}
 					/>
 			</MapView>
-				<Button title="Pin pointer" onPress={()=>{}} />
 		</View>
 	)
 };

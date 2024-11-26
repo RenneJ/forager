@@ -21,10 +21,16 @@ const styles = StyleSheet.create({
   drawerLogout: {
 
   },
-  map:{
+  map: {
   	width: Dimensions.get('window').width * 0.9,
    	height: Dimensions.get('window').height * 0.5,
-  }
+  },
+  listHeader: {
+
+  },
+  requiredField: {
+
+  },
 })
 
 export default styles;

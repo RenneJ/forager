@@ -31,7 +31,9 @@ export const storeBasket = async (key, value) => {
 	}
 }
 
-export const storeArea = async (key, value) => {
+// pointless wrapper
+// i just didn't want to import any AsyncStorage methods to components
+export const setItem = async (key, value) => {
 	try {
 		await storage.setItem(key, value);
 	} catch(error) {
@@ -39,9 +41,21 @@ export const storeArea = async (key, value) => {
 	}
 }
 
+// pointless wrapper
+// i just didn't want to import any AsyncStorage methods to components
+export const getItem = async (key) => {
+	try {
+		let value = await storage.getItem(key);
+		// parse value?
+		return value;
+	} catch(error){
+		console.log(error)
+	}
+}
+
 export const isStarted = async(key) => {
 	if (await storage.getItem(key)) {
-		console.log(await storage.getItem(key))
+		console.log("ls44", await storage.getItem(key))
 		return true;
 	}
 	return false;

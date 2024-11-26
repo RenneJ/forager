@@ -7,7 +7,7 @@ import styles from "../styles";
 
 const database = getDatabase(app);
 const now = new Date(Date.now());
-const nowFormat = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
+const nowFormat = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
 
 export default function Collections(){
 	// TODO: list previous trips (sort by time: desc)

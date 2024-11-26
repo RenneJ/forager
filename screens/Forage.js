@@ -2,16 +2,13 @@ import { View, Text, Button, TextInput, FlatList } from "react-native";
 import { useState, useEffect, useRef } from 'react';
 import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
-import { storeBasket, storeArea, clear, isStarted, parseStoredValue, storage } from "../utils/localstorage";
+import { storeBasket, storeArea, clear, isStarted, parseStoredValue, getItem, setItem } from "../utils/localstorage";
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
 import SpotMarker from "../components/SpotMarker";
 
-const database = getDatabase(app);
-const now = new Date(Date.now());
-const nowFormat = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
-
 export default function Forage({navigation}){
 	const [area, setArea] = useState("");
+	const [warning, setWarning] = useState("");
 	const [started, setStarted] = useState(false);
 	const [basket, setBasket] = useState([]); // items that user puts in their basket
 	const [name, setName] = useState("");
@@ -34,17 +31,21 @@ export default function Forage({navigation}){
 
 	const handleBasketAdd = () => {
 		changeRef({...basketItem.current, name: name})
-		setBasket([...basket, basketItem.current]);
+		setBasket([... basket, basketItem.current]);
 		//changeRef(null);
 	}
 
 	const handleStart = () => {
-		setStarted(true);
-		storeArea("area", area);
+		if (!area) {
+			setWarning("Area is required.")
+		} else {
+			setItem("area", area);
+			setStarted(true);
+		}
 	}
 
 	const handleCoordinateChange = (latitude, longitude) => {
-		changeRef({ latitude: latitude, longitude:longitude });
+		changeRef({ name: name, latitude: latitude, longitude:longitude });
 		//changeRef({ ...basketItem, longitude: longitude });
 		if(basketItem.current){
 			console.log("53", basketItem.current);
@@ -53,7 +54,7 @@ export default function Forage({navigation}){
 
 	// Switch Screen, foraging trip is still saved locally
 	const handleEnd = () => {
-		setStarted(false);
+		//setStarted(false);
 		navigation.navigate("Collections");
 	}
 	// Update local storage every time an item is added to basket.
@@ -69,11 +70,12 @@ export default function Forage({navigation}){
 		}
 	}, [basket])
 
-	// check if there is ongoing foraging i.e. area is set
+	// check if there is ongoing foraging
 	useEffect(() => {
 		try {
 			getStoredBasket();
-			setStarted(async () => await isStarted("area"));
+			isStarted("area").then(resp => setStarted(resp));
+			getItem("area").then(resp => setArea(resp));
 		} catch(error) {
 			console.log(error)
 		}
@@ -81,8 +83,12 @@ export default function Forage({navigation}){
 
 	const getStoredBasket = async () => {
 		try {
-			console.log(await parseStoredValue("basket"))
-			setBasket(... basket, await parseStoredValue("basket"))
+			await parseStoredValue("basket").then(resp => {
+				if (resp) {
+					setBasket(...basket, resp)
+				}
+			});
+			await getItem("area").then(resp => setArea(resp));
 		} catch(error) {
 			console.log(error)
 		}
@@ -90,20 +96,19 @@ export default function Forage({navigation}){
 
 	return(
 		<View style={styles.container}>
-			<Text>FORAGE PAGE</Text>
-			<Text>Current user: { auth.currentUser?.email }</Text>
-			{started ?
+			{started == true ?
 				<View style={styles.container}>
+					<SpotMarker setCoordinates={handleCoordinateChange} basketItem={basketItem} />
+					<Button title="Add to basket" onPress={handleBasketAdd} />
+					<Button title="End Trip" onPress={handleEnd} />
+					<Button title="Clear Storage" onPress={clearStorage} />
 					<TextInput
 						placeholder="Mushroom name"
 						value={name}
 						onChangeText={text => setName(text)}
 					/>
-					<SpotMarker setCoordinates={handleCoordinateChange} basketItem={basketItem} />
-					<Button title="Add to basket" onPress={handleBasketAdd} />
-					<Button title="End Trip" onPress={handleEnd} />
-					<Button title="Clear Storage" onPress={clearStorage} />
 					<FlatList
+						ListHeaderComponent={area && <Text style={styles.listHeader}>{area}</Text>}
 						data={basket}
 						renderItem={({item}) =>
 							<Text>{ item.name }</Text>
@@ -118,7 +123,7 @@ export default function Forage({navigation}){
 						onChangeText={text => setArea(text)}
 					/>
 					<Button title="Start Foraging" onPress={handleStart} />
-
+					{warning && <Text style={styles.requiredField}>{warning}</Text>}
 				</View> }
 
 		</View>
