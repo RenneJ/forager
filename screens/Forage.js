@@ -2,7 +2,7 @@ import { View, Text, Button, TextInput, FlatList } from "react-native";
 import { useState, useEffect, useRef } from 'react';
 import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
-import { storeBasket, storeArea, clear, isStarted } from "../utils/localstorage";
+import { storeBasket, storeArea, clear, isStarted, parseStoredValue, storage } from "../utils/localstorage";
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
 import SpotMarker from "../components/SpotMarker";
 
@@ -11,21 +11,17 @@ const now = new Date(Date.now());
 const nowFormat = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
 
 export default function Forage({navigation}){
-	// TODO: "Add to Basket", collect inputs: name, location (pin on map)
-	// TODO: save locally, when internet connection send to firebase
-	// TODO: save uid locally
 	const [area, setArea] = useState("");
 	const [started, setStarted] = useState(false);
-	const [basket, setBasket] = useState([]); //list of items here i.e. what a person puts in their basket
+	const [basket, setBasket] = useState([]); // items that user puts in their basket
 	const [name, setName] = useState("");
-	// Pass coordinates here from child component (SpotMarker)
-	// to avoid too many re-renders (infinite loop)
-	const ref = useRef({
+	// If useState is used, every time SpotMarker is rendered so would its parent Forage be rendered
+	const basketItem = useRef({
 		name: "",
-		lat: "",
-		lon: ""
+		latitude: 0,
+		longitude: 0
 	});
-	const changeRef=(value)=>{ ref.current=value }
+	const changeRef=(value)=>{ basketItem.current=value }
 
 	// TEMP HERE
 	const clearStorage = () => {
@@ -37,8 +33,8 @@ export default function Forage({navigation}){
 	}
 
 	const handleBasketAdd = () => {
-		changeRef({...ref.current, name: name})
-		setBasket([...basket, ref.current]);
+		changeRef({...basketItem.current, name: name})
+		setBasket([...basket, basketItem.current]);
 		//changeRef(null);
 	}
 
@@ -47,11 +43,11 @@ export default function Forage({navigation}){
 		storeArea("area", area);
 	}
 
-	const handleCoordinateChange = (lat, lon) => {
-		changeRef({ lat: lat, lon:lon });
-		//changeRef({ ...ref, lon: lon });
-		if(ref.current){
-			console.log("53", ref.current);
+	const handleCoordinateChange = (latitude, longitude) => {
+		changeRef({ latitude: latitude, longitude:longitude });
+		//changeRef({ ...basketItem, longitude: longitude });
+		if(basketItem.current){
+			console.log("53", basketItem.current);
 		}
 	}
 
@@ -63,8 +59,8 @@ export default function Forage({navigation}){
 	// Update local storage every time an item is added to basket.
 	useEffect(() => {
 		try {
-			if (Object.values(ref.current).every((value) => value != "")) {
-				storeBasket("basket", ref.current)
+			if (Object.values(basketItem.current).every((value) => value != "")) {
+				storeBasket("basket", basketItem.current)
 			}
 		}catch (error) {
 			console.log(error);
@@ -76,11 +72,21 @@ export default function Forage({navigation}){
 	// check if there is ongoing foraging i.e. area is set
 	useEffect(() => {
 		try {
-			started = async () => await isStarted("area")
+			getStoredBasket();
+			setStarted(async () => await isStarted("area"));
 		} catch(error) {
 			console.log(error)
-		} finally{console.log("f65", started)}
-		}, [])
+		}
+	}, [])
+
+	const getStoredBasket = async () => {
+		try {
+			console.log(await parseStoredValue("basket"))
+			setBasket(... basket, await parseStoredValue("basket"))
+		} catch(error) {
+			console.log(error)
+		}
+	}
 
 	return(
 		<View style={styles.container}>
@@ -93,17 +99,16 @@ export default function Forage({navigation}){
 						value={name}
 						onChangeText={text => setName(text)}
 					/>
-					<SpotMarker setCoordinates={handleCoordinateChange} />
+					<SpotMarker setCoordinates={handleCoordinateChange} basketItem={basketItem} />
 					<Button title="Add to basket" onPress={handleBasketAdd} />
 					<Button title="End Trip" onPress={handleEnd} />
 					<Button title="Clear Storage" onPress={clearStorage} />
 					<FlatList
-					data={basket}
-					renderItem={({item}) =>
-						<Text>{ item.name }</Text>
-					}
+						data={basket}
+						renderItem={({item}) =>
+							<Text>{ item.name }</Text>
+						}
 					/>
-
 				</View>
 				:
 				<View styles={styles.container}>
