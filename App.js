@@ -9,8 +9,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 
 export default function App() {
-	// TODO:
-	// get accesstoken from firestore
 	const [state, dispatch] = useReducer(
     (prevState, action) => {
       switch (action.type) {

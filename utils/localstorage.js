@@ -1,13 +1,12 @@
 import { auth, app, storage } from "../firebaseconfig";
 
 
-//key = "basket", value = {name, lat, lon}
+// gets object, stores string
 export const storeBasket = async (key, value) => {
-	if (value.name == "") {
-		console.log("forage started");
+	if (!value.name || !value.latitude || !value.longitude) {
+		throw new Error("Input name and pin location.");
 	} else {
 		var objectList = [];
-
 		// Null when trying to add first item
 		const object = await parseStoredValue(key);
 
@@ -72,9 +71,9 @@ export const parseStoredValue = async (key) => {
 	return object;
 }
 
-export const clear = async (key) => {
+export const removeItems = (keys) => {
 	try {
-		await storage.removeItem(key)
+		keys.forEach(async (key) => await storage.removeItem(key))
 	} catch(error) {
 			console.log(error)
 	}

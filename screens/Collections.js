@@ -1,51 +1,50 @@
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, FlatList } from "react-native";
 import { useState, useEffect } from 'react';
-import { clear, parseStoredValue} from "../utils/localstorage";
+import { clear, parseStoredValue, getItem} from "../utils/localstorage";
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
-import { auth, app, storage } from "../firebaseconfig";
+import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
 
 const database = getDatabase(app);
-const now = new Date(Date.now());
-const nowFormat = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
 
 export default function Collections(){
+	// TODO: if wifi do storeInCloud
 	// TODO: list previous trips (sort by time: desc)
 	// TODO: "Go Forage" -> Forage
-
-	// TODO: if wifi do handleSync
-	const handleSync = async () => {
-		try {
-			const area = await storage.getItem("area");
-			const basket = await parseStoredValue("basket");
-			if (basket && area) {
-				push(ref(database, "collection/" + auth.currentUser.uid), {
-					time: nowFormat,
-					area: area,
-					basket: basket
+	const [trips, setTrips] = useState([]);
+	const [docs, setDocs] = useState({});
+	useEffect(() => {
+		if (auth) {
+			try {
+				const itemsRef = ref(database, "/collection/" + auth.currentUser.uid);
+				onValue(itemsRef, (snapshot) => {
+					const data = snapshot.val();
+					if (data) {
+						setTrips(Object.values(data));
+						setDocs(data);
+						console.log(data)
+					} else {
+						setTrips([]);
+					}
 				});
-				clearStorage();
-			} else {
-				console.log("Nothing to send.")
+			} catch(error) {
+				console.log("c29", error)
+			} finally {
+				console.log("c33",trips)
 			}
-		} catch(error){
-			console.log("coll29", error)
 		}
-	}
-	const clearStorage = () => {
-		clear("basket");
-		clear("area")
-	}
-
-	const handleParse = async () => {
-		const basket = await parseStoredValue("area");
-	}
+	}, []);
 
 	return(
 		<View style={styles.container}>
-			<Text>COLLECTIONS PAGE</Text>
-			<Button title="Sync to cloud" onPress={handleSync} />
-			<Button title="PARSE TEST" onPress={handleParse} />
+			<View style={styles.collectionList}>
+			<FlatList
+				data={trips}
+				renderItem={({ item }) =>
+					<Text>{item.area}, {item.time}</Text>
+				}
+			/>
+			</View>
 		</View>
 	)
 }
