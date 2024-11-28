@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import NetInfo from '@react-native-community/netinfo';
-import { removeItems, parseStoredValue, getItem} from "../utils/localstorage";
+import { removeItems, parseStoredValue, fetchItem} from "../utils/localstorage";
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
 import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
@@ -11,7 +11,7 @@ const nowFormat = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
 
 export const storeInCloud = async () => {
 		try {
-			const area = await getItem("area");
+			const area = await fetchItem("area");
 			const basket = await parseStoredValue("basket");
 			if (basket && area) {
 				push(ref(database, "collection/" + auth.currentUser.uid), {
@@ -24,6 +24,6 @@ export const storeInCloud = async () => {
 				console.log("Nothing to send.")
 			}
 		} catch (error) {
-			console.log("coll29", error)
+			console.log("cs27", error)
 		}
 }

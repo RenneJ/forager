@@ -3,31 +3,11 @@ import { auth, app, storage } from "../firebaseconfig";
 
 // gets object, stores string
 export const storeBasket = async (key, value) => {
-	if (!value.name || !value.latitude || !value.longitude) {
-		throw new Error("Input name and pin location.");
-	} else {
-		var objectList = [];
-		// Null when trying to add first item
-		const object = await parseStoredValue(key);
-
-		if(object){
-			// Items 2nd and ->
-			objectList = [...object, value];
-		} else {
-		// First item added to basket
-			objectList = [value];
-		}
-
-		await storage.setItem(key, JSON.stringify(objectList))
+		await storage.setItem(key, JSON.stringify(value))
 			.catch((error) => {
 				console.log(error);
 			})
-
-		console.log("20", await storage.multiGet([key, "area"])
-			.catch((error) => {
-				console.log(error);
-			}))
-	}
+		console.log("ls26", await storage.getItem("area"), "-----", await storage.getItem(key) )
 }
 
 // pointless wrapper
@@ -42,7 +22,7 @@ export const setItem = async (key, value) => {
 
 // pointless wrapper
 // i just didn't want to import any AsyncStorage methods to components
-export const getItem = async (key) => {
+export const fetchItem = async (key) => {
 	try {
 		let value = await storage.getItem(key);
 		// parse value?

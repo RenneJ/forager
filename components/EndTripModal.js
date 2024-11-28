@@ -22,6 +22,7 @@ export default function EndTripModal(props){
     setTimeout(() => {
     	setUploading(false);
 			props.navigation.navigate("Collections");
+			props.setEndModalVisible(false);
   }, 1500);
   }
 }, [uploading]);

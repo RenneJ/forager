@@ -1,6 +1,5 @@
 import { View, Text, Button, FlatList } from "react-native";
 import { useState, useEffect } from 'react';
-import { clear, parseStoredValue, getItem} from "../utils/localstorage";
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
 import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
@@ -22,7 +21,6 @@ export default function Collections(){
 					if (data) {
 						setTrips(Object.values(data));
 						setDocs(data);
-						console.log(data)
 					} else {
 						setTrips([]);
 					}
@@ -42,6 +40,7 @@ export default function Collections(){
 				data={trips}
 				renderItem={({ item }) =>
 					<Text>{item.area}, {item.time}</Text>
+					/* Component for inspecting selected trip */
 				}
 			/>
 			</View>

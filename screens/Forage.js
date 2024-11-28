@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
 import NetInfo from '@react-native-community/netinfo';
-import { storeBasket, storeArea, removeItems, isStarted, parseStoredValue, getItem, setItem } from "../utils/localstorage";
+import { storeBasket, storeArea, removeItems, isStarted, parseStoredValue, fetchItem, setItem } from "../utils/localstorage";
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
 import SpotMarker from "../components/SpotMarker";
 import EndTripModal from "../components/EndTripModal";
@@ -12,18 +12,23 @@ export default function Forage({navigation}){
 	const [area, setArea] = useState("");
 	const [warning, setWarning] = useState("");
 	const [started, setStarted] = useState(false);
-	const [basket, setBasket] = useState([]); // items that user puts in their basket
+	const [basket, setBasket] = useState([]); // items that user collects during their trip
 	const [endModalVisible, setEndModalVisible] = useState(false);
 	const [addModalVisible, setAddModalVisible] = useState(false);
 	const [isConnected, setIsConnected] = useState(null)
-	const [name, setName] = useState("");
+	//	const [name, setName] = useState(null);
 	const [error, setError] = useState("");
 	// If useState is used, every time SpotMarker is rendered so would its parent
-	const basketItem = useRef({
-		name: "",
-		latitude: 0,
-		longitude: 0
+	const [basketItem, setBasketItem] = useState({
+		name: null,
+		latitude: null,
+		longitude: null
 	});
+	/*const basketItem = useRef({
+		name: null,
+		latitude: null,
+		longitude: null
+		});*/
 	const changeBasketItem=(value)=>{ basketItem.current=value }
 
 	// TEMP HERE
@@ -31,25 +36,56 @@ export default function Forage({navigation}){
 		removeItems(["basket", "area"])
 		setBasket([]);
 		setStarted(false);
-		changeBasketItem(null);
+		setBasketItem({
+			name: null,
+			latitude: null,
+			longitude: null
+		});
 	}
 
 	const handleBasketAdd = () => {
+		if (!basketItem.name || !basketItem.latitude || !basketItem.longitude) {
+			// Don't handle empties
+			// Notify user of erroneous input
+		} else {
+			setBasket([...basket, basketItem])
+		}
+	}
+
+	useEffect(() => {
 		// show modal
 		// modal gets error message
 		// if error message, show
 		// else show what was added into basket
 		// close button and timeout(5000)
-		try {
-			changeBasketItem({ ...basketItem.current, name: name})
-			setBasket([...basket, basketItem.current]);
-			setAddModalVisible(true);
-			//
-		} catch(error){
-
+		let modalMessage;
+		let modalStyle;
+		if (!basketItem.name || !basketItem.latitude || !basketItem.longitude) {
+			modalMessage = "Input name and pin location.";
+			modalStyle = "warning";
+			console.log("f57", basketItem)
+		} else {
+			try {
+				//changeBasketItem({ ...basketItem.current, name: name });
+				//setBasket([...basket, basketItem.current]);
+				storeBasket("basket", basket)
+					.then(modalMessage = `${basketItem.name} and its location added to basket.`)
+					.then(modalStyle = "success")
+					.catch(error => console.log("f65err",error.message))
+			} catch (error) {
+				modalMessage = error;
+				modalStyle = "error";
+			} finally {
+				// reset input field and map pin
+				setBasketItem({
+					name: null,
+					latitude: null,
+					longitude: null
+				});
+			}
 		}
-		//changeBasketItem(null);
-	}
+		console.log("f78", modalMessage)
+	}, [basket])
 
 	const handleStart = () => {
 		if (!area) {
@@ -82,7 +118,8 @@ export default function Forage({navigation}){
 		// and storeInCloud
 	}
 	// Update local storage every time an item is added to basket.
-	useEffect(() => {
+	//
+	/*useEffect(() => {
 		try {
 			storeBasket("basket", basketItem.current)
 				.catch(error => setError(error.message))
@@ -92,14 +129,14 @@ export default function Forage({navigation}){
 			setName("");
 			// reset pin
 		}
-	}, [basket])
+		}, [basket])*/
 
 	// check if there is ongoing foraging on app start
 	useEffect(() => {
 		try {
 			getStoredBasket();
 			isStarted("area").then(resp => setStarted(resp));
-			//getItem("area").then(resp => setArea(resp));
+			//fetchItem("area").then(resp => setArea(resp));
 		} catch(error) {
 			console.log("f83",error)
 		}
@@ -109,17 +146,17 @@ export default function Forage({navigation}){
 		try {
 			await parseStoredValue("basket").then(resp => {
 				if (resp) {
-					setBasket(...basket, resp)
+					setBasket(resp)
 				}
 			});
-			await getItem("area").then(resp => setArea(resp));
+			await fetchItem("area").then(resp => setArea(resp));
 		} catch(error) {
 			console.log(error)
 		}
 	}
 
 	const checkStorage = async () => {
-		await getItem("area").then(resp => console.log("f101",typeof(resp), typeof(started)))
+		await fetchItem("area").then(resp => console.log("f101",typeof(resp), typeof(started)))
 			.then(resp => { if (resp === null) { return false; } })
 		return false
 	}
@@ -135,11 +172,11 @@ export default function Forage({navigation}){
 			>
 				{started == true ?
 					<View>
-						<SpotMarker setCoordinates={handleCoordinateChange} basketItem={basketItem} />
+						<SpotMarker basketItem={basketItem} setBasketItem={setBasketItem} />
 						<TextInput
 							placeholder="Mushroom name"
-							value={name}
-							onChangeText={text => setName(text)}
+							value={basketItem.name}
+							onChangeText={text => setBasketItem({...basketItem, name:text})}
 						/>
 						<Button title="Clear Storage" onPress={clearStorage} />
 						<Button title="Add to basket" onPress={handleBasketAdd} />

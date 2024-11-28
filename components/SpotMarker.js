@@ -6,12 +6,7 @@ import styles from "../styles";
 import { storeBasket, storeArea, clear, isStarted } from "../utils/localstorage";
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
 
-export default function SpotMarker({setCoordinates}){
-	const [markerCoordinate, setMarkerCoordinate] = useState({
-		latitude: 0,
-		longitude: 0
-	});
-
+export default function SpotMarker(props){
 	return(
 		<View>
 			<MapView
@@ -24,16 +19,19 @@ export default function SpotMarker({setCoordinates}){
 				}}
 				onPress={event => {
 					// Place marker here
-					setMarkerCoordinate({ latitude: event.nativeEvent.coordinate.latitude, longitude: event.nativeEvent.coordinate.longitude});
-					setCoordinates(
-						event.nativeEvent.coordinate.latitude,
-						event.nativeEvent.coordinate.longitude
-					)
+					props.setBasketItem({
+						...props.basketItem,
+						latitude: event.nativeEvent.coordinate.latitude,
+						longitude: event.nativeEvent.coordinate.longitude
+					});
+					console.log(props.basketItem)
 				}}
 			>
+				{props.basketItem.latitude &&
 					<Marker
-						coordinate={{ latitude: markerCoordinate.latitude, longitude: markerCoordinate.longitude}}
+						coordinate={{ latitude: props.basketItem.latitude, longitude: props.basketItem.longitude }}
 					/>
+				}
 			</MapView>
 		</View>
 	)
