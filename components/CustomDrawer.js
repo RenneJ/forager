@@ -1,6 +1,7 @@
 import { DrawerContentScrollView, DrawerItemList, DrawerItem, createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { Text } from "react-native";
 import { useContext } from "react";
 import Access from "../screens/Access";
@@ -23,20 +24,22 @@ function CustomDrawerContent(props) {
 	}
 	// TODO: Loading indicator, isLoading alrdy passed in props
   return (
-    <DrawerContentScrollView {...props}>
+		<SafeAreaView style={{ flex: 1, backgroundColor: "#8ed4a5" }} forceInset={{ top: "always", horizontal: "never" }}>
+		<DrawerContentScrollView contentContainerStyle={styles.drawer }  {...props}>
 	    <DrawerItemList {...props} />
-	      <DrawerItem
-					style={styles.drawerLogout}
-					label={() => <Text style={styles.warning}>Logout</Text>}
-	        onPress={handleLogOut}
-	      />
     </DrawerContentScrollView>
+      <DrawerItem
+				label={() => <Text style={styles.drawerLogout}>Logout</Text>}
+        onPress={handleLogOut}
+      />
+  </SafeAreaView>
   );
 }
 
 export default function CustomDrawer(props){
 
 	return(
+		<SafeAreaProvider>
 		<NavigationContainer>
 			{props.state.userToken == null ? (
 				<Stack.Navigator initialRouteName="Signup">
@@ -44,12 +47,13 @@ export default function CustomDrawer(props){
 						<Stack.Screen name="Signup" component={Signup} />
 				</Stack.Navigator>
 			) : (
-				<Drawer.Navigator initialRouteName="Collections" drawerContent={props => <CustomDrawerContent {...props} />}>
-					<Drawer.Screen name="Collections" component={Collections} />
-					<Drawer.Screen name="Forage" component={Forage} />
-					<Drawer.Screen name="Profile" component={Profile} />
+						<Drawer.Navigator screenOptions={{ headerStyle: { backgroundColor: "#8ed4a5"} }} initialRouteName="Collections" drawerContent={props => <CustomDrawerContent {...props} />}>
+					<Drawer.Screen name="Collections" component={Collections} options={styles.drawerItem}/>
+					<Drawer.Screen name="Forage" component={Forage} options={styles.drawerItem} />
+					<Drawer.Screen name="Profile" component={Profile} options={styles.drawerItem}/>
 				</Drawer.Navigator>
 			)}
 		</NavigationContainer>
-	)
+	</SafeAreaProvider>
+		)
 }

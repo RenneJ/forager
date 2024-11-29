@@ -3,13 +3,24 @@ import { StyleSheet, Dimensions } from "react-native";
 const styles = StyleSheet.create({
 	container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#8ed4a5',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
-  credentialInput: {
-  	height: 40,
+	credentialInput: {
+		height: 40,
+	},
+  drawer: {
+		backgroundColor: "#8ed4a5",
 
+  },
+  drawerItem: {
+	  drawerActiveBackgroundColor: "#dfebdf",
+	  drawerActiveTintColor: "#1f471f",
+		drawerLabelStyle: {
+      color: "#1f471f",
+      fontSize: 20,
+    },
   },
   warning: {
   	color: "red",
@@ -19,7 +30,9 @@ const styles = StyleSheet.create({
    	width: 150,
   },
   drawerLogout: {
-
+		color: "#d10f0f",
+		fontSize: 16,
+		margin: "auto"
   },
   map: {
   	width: Dimensions.get('window').width * 0.9,
@@ -51,6 +64,15 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  modalWarning: {
+  	backgroundColor: "yellow",
+  },
+  modalError: {
+
+  },
+  modalSuccess: {
+  	backgroundColor: "#70db95",
+  },
   button: {
     borderRadius: 20,
     padding: 10,
@@ -72,11 +94,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   collectionList: {
-  	flex: 0.8,
+  	//flex: 0.8,
     backgroundColor: "red",
   },
   inputContainer: {
 
+  },
+  topView: {
+  	flex: 0.6,
+	  justifyContent: 'center',
+	  alignItems: 'center',
   },
 })
 

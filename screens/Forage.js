@@ -7,6 +7,7 @@ import { storeBasket, storeArea, removeItems, isStarted, parseStoredValue, fetch
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
 import SpotMarker from "../components/SpotMarker";
 import EndTripModal from "../components/EndTripModal";
+import AddedModal from "../components/AddedModal";
 
 export default function Forage({navigation}){
 	const [area, setArea] = useState("");
@@ -49,6 +50,9 @@ export default function Forage({navigation}){
 		if (!basketItem.name || !basketItem.latitude || !basketItem.longitude) {
 			// Don't handle empties
 			// Notify user of erroneous input
+			setModalStyle("warning");
+			setModalMessage("Input name and pin location.");
+			setAddModalVisible(true);
 		} else {
 			setBasket([...basket, basketItem])
 		}
@@ -136,23 +140,22 @@ export default function Forage({navigation}){
 	return(
     <KeyboardAvoidingView
     		style={ styles.container }
-      behavior={ Platform.OS === 'ios' ? 'padding' : 'height' }
+      behavior={ 'padding' }
     >
 			<ScrollView
 				showVerticalScrollIndicator={ false }
-
 			>
 				{started == true ?
 					<View>
 						<SpotMarker basketItem={ basketItem } setBasketItem={ setBasketItem } />
+						<Button title="Clear Storage" onPress={ clearStorage } />
+						<Button title="Add to basket" onPress={ handleBasketAdd } />
+						<Button title="End Trip" onPress={ handleEnd } />
 						<TextInput
 							placeholder="Mushroom name"
 							value={ basketItem.name }
 							onChangeText={text => setBasketItem({ ...basketItem, name:text })}
 						/>
-						<Button title="Clear Storage" onPress={ clearStorage } />
-						<Button title="Add to basket" onPress={ handleBasketAdd } />
-						<Button title="End Trip" onPress={ handleEnd } />
 						<EndTripModal
 							navigation={ navigation }
 							isConnected={ isConnected }
