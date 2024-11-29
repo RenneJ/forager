@@ -15,6 +15,8 @@ export default function Forage({navigation}){
 	const [basket, setBasket] = useState([]); // items that user collects during their trip
 	const [endModalVisible, setEndModalVisible] = useState(false);
 	const [addModalVisible, setAddModalVisible] = useState(false);
+	const [modalMessage, setModalMessage] = useState("");
+	const [modalStyle, setModalStyle] = useState("");
 	const [isConnected, setIsConnected] = useState(null)
 	//	const [name, setName] = useState(null);
 	const [error, setError] = useState("");
@@ -58,33 +60,27 @@ export default function Forage({navigation}){
 		// if error message, show
 		// else show what was added into basket
 		// close button and timeout(5000)
-		let modalMessage;
-		let modalStyle;
 		if (!basketItem.name || !basketItem.latitude || !basketItem.longitude) {
-			modalMessage = "Input name and pin location.";
-			modalStyle = "warning";
-			console.log("f57", basketItem)
+			setModalMessage("Input name and pin location.");
+			setModalStyle("warning");
 		} else {
 			try {
-				//changeBasketItem({ ...basketItem.current, name: name });
-				//setBasket([...basket, basketItem.current]);
 				storeBasket("basket", basket)
-					.then(modalMessage = `${basketItem.name} and its location added to basket.`)
-					.then(modalStyle = "success")
+					.then(setModalMessage(`${basketItem.name} and its location added to basket.`))
+					.then(setModalStyle("success"))
 					.catch(error => console.log("f65err",error.message))
 			} catch (error) {
-				modalMessage = error;
-				modalStyle = "error";
+				setModalMessage(error);
+				setModalStyle("error");
 			} finally {
-				// reset input field and map pin
 				setBasketItem({
 					name: null,
 					latitude: null,
 					longitude: null
 				});
+				setAddModalVisible(true);
 			}
 		}
-		console.log("f78", modalMessage)
 	}, [basket])
 
 	const handleStart = () => {
@@ -96,16 +92,6 @@ export default function Forage({navigation}){
 		}
 	}
 
-	const handleCoordinateChange = (latitude, longitude) => {
-		changeBasketItem({ name: name, latitude: latitude, longitude:longitude });
-		//changeBasketItem({ ...basketItem, longitude: longitude });
-		if(basketItem.current){
-			console.log("53", basketItem.current);
-		}
-	}
-
-	// Switch Screen, foraging trip is still saved locally
-
 	const handleEnd = async () => {
 		// check if internet connection
 		NetInfo.fetch()
@@ -115,21 +101,7 @@ export default function Forage({navigation}){
 			.catch(error => {})
 		// open modal
 		setEndModalVisible(true);
-		// and storeInCloud
 	}
-	// Update local storage every time an item is added to basket.
-	//
-	/*useEffect(() => {
-		try {
-			storeBasket("basket", basketItem.current)
-				.catch(error => setError(error.message))
-		}catch (error) {
-			console.log("f73",error);
-		}finally {
-			setName("");
-			// reset pin
-		}
-		}, [basket])*/
 
 	// check if there is ongoing foraging on app start
 	useEffect(() => {
@@ -163,39 +135,46 @@ export default function Forage({navigation}){
 
 	return(
     <KeyboardAvoidingView
-    		style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    		style={ styles.container }
+      behavior={ Platform.OS === 'ios' ? 'padding' : 'height' }
     >
 			<ScrollView
-				showVerticalScrollIndicator={false}
+				showVerticalScrollIndicator={ false }
 
 			>
 				{started == true ?
 					<View>
-						<SpotMarker basketItem={basketItem} setBasketItem={setBasketItem} />
+						<SpotMarker basketItem={ basketItem } setBasketItem={ setBasketItem } />
 						<TextInput
 							placeholder="Mushroom name"
-							value={basketItem.name}
-							onChangeText={text => setBasketItem({...basketItem, name:text})}
+							value={ basketItem.name }
+							onChangeText={text => setBasketItem({ ...basketItem, name:text })}
 						/>
-						<Button title="Clear Storage" onPress={clearStorage} />
-						<Button title="Add to basket" onPress={handleBasketAdd} />
-						<Button title="End Trip" onPress={handleEnd} />
+						<Button title="Clear Storage" onPress={ clearStorage } />
+						<Button title="Add to basket" onPress={ handleBasketAdd } />
+						<Button title="End Trip" onPress={ handleEnd } />
 						<EndTripModal
-							navigation={navigation}
+							navigation={ navigation }
 							isConnected={ isConnected }
 							endModalVisible={ endModalVisible }
-							setEndModalVisible= {setEndModalVisible} />
+							setEndModalVisible= { setEndModalVisible }
+						/>
+						<AddedModal
+							addModalVisible={ addModalVisible }
+							setAddModalVisible= { setAddModalVisible }
+							modalStyle={ modalStyle }
+							modalMessage={ modalMessage }
+						/>
 					</View>
 					:
 					<View>
 						<TextInput
 							placeholder="Area"
-							value={area}
+							value={ area }
 							onChangeText={text => setArea(text)}
 						/>
-						<Button title="Start Foraging" onPress={handleStart} />
-						{warning && <Text style={styles.requiredField}>{warning}</Text>}
+						<Button title="Start Foraging" onPress={ handleStart } />
+						{ warning && <Text style={ styles.requiredField }>{ warning }</Text>}
 					</View> }
 
 			</ScrollView>
