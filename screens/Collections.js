@@ -1,8 +1,9 @@
-import { View, Text, Button, FlatList } from "react-native";
+import { View, Text, Button, FlatList, ListEmptyComponent } from "react-native";
 import { useState, useEffect } from 'react';
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
 import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
+import EmptyCollection from "../components/EmptyCollection";
 
 const database = getDatabase(app);
 
@@ -37,6 +38,7 @@ export default function Collections(){
 		<View style={styles.container}>
 			<View style={styles.collectionList}>
 			<FlatList
+				ListEmptyComponent={EmptyCollection}
 				data={trips}
 				renderItem={({ item }) =>
 					<Text>{item.area}, {item.time}</Text>
