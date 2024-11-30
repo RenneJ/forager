@@ -10,10 +10,8 @@ export default function EndTripModal(props){
 	const handleCloudSave = async () => {
 		setUploading(true);
 		try {
-			storeInCloud()
-		} finally{
-			console.log("sended")
-
+			storeInCloud();
+		} catch(error){
 		}
 	}
 
@@ -23,6 +21,7 @@ export default function EndTripModal(props){
     	setUploading(false);
 			props.navigation.navigate("Collections");
 			props.setEndModalVisible(false);
+			props.reset();
   }, 1500);
   }
 }, [uploading]);
@@ -47,12 +46,13 @@ export default function EndTripModal(props){
 							 />
 						:
 							<View>
-              <Text style={styles.modalText}>End trip</Text>
+									<Text style={styles.modalText}>End current trip: { props.area }</Text>
               { props.isConnected ?
 	              <Pressable
 	                style={[styles.button, styles.buttonClose]}
-	                onPress={handleCloudSave}>
-	                 <Text style={styles.textStyle}>Save</Text>
+	                onPress={handleCloudSave}
+								>
+	                <Text style={styles.textStyle}>Save</Text>
 	              </Pressable>
 							:
 	              <Pressable

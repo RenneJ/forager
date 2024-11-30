@@ -11,7 +11,6 @@ import AddedModal from "../components/AddedModal";
 
 export default function Forage({navigation}){
 	const [area, setArea] = useState("");
-	const [id, setId] = useState(null);
 	const [warning, setWarning] = useState("");
 	const [started, setStarted] = useState(false);
 	const [basket, setBasket] = useState([]); // items that user collects during their trip
@@ -20,26 +19,17 @@ export default function Forage({navigation}){
 	const [modalMessage, setModalMessage] = useState("");
 	const [modalStyle, setModalStyle] = useState("");
 	const [isConnected, setIsConnected] = useState(null)
-	//	const [name, setName] = useState(null);
-	const [error, setError] = useState("");
-	// If useState is used, every time SpotMarker is rendered so would its parent
 	const [basketItem, setBasketItem] = useState({
 		name: null,
 		latitude: null,
 		longitude: null
 	});
-	/*const basketItem = useRef({
-		name: null,
-		latitude: null,
-		longitude: null
-		});*/
-	const changeBasketItem=(value)=>{ basketItem.current=value }
 
-	// TEMP HERE
-	const clearStorage = () => {
+	const cleanUp = () => {
 		removeItems(["basket", "area"])
 		setBasket([]);
 		setStarted(false);
+		setArea("");
 		setBasketItem({
 			name: null,
 			latitude: null,
@@ -60,11 +50,6 @@ export default function Forage({navigation}){
 	}
 
 	useEffect(() => {
-		// show modal
-		// modal gets error message
-		// if error message, show
-		// else show what was added into basket
-		// close button and timeout(5000)
 		if (!basketItem.name || !basketItem.latitude || !basketItem.longitude) {
 			setModalMessage("Input name and pin location.");
 			setModalStyle("warning");
@@ -113,7 +98,6 @@ export default function Forage({navigation}){
 		try {
 			getStoredBasket();
 			isStarted("area").then(resp => setStarted(resp));
-			//fetchItem("area").then(resp => setArea(resp));
 		} catch(error) {
 			console.log("f83",error)
 		}
@@ -132,12 +116,6 @@ export default function Forage({navigation}){
 		}
 	}
 
-	const checkStorage = async () => {
-		await fetchItem("area").then(resp => console.log("f101",typeof(resp), typeof(started)))
-			.then(resp => { if (resp === null) { return false; } })
-		return false
-	}
-
 	return(
     <KeyboardAvoidingView
     		style={ styles.container }
@@ -146,10 +124,10 @@ export default function Forage({navigation}){
 			<ScrollView
 				showVerticalScrollIndicator={ false }
 			>
-				{started == true ?
+				{started === true ?
 					<View>
 						<SpotMarker basketItem={ basketItem } setBasketItem={ setBasketItem } />
-						<Button title="Clear Storage" onPress={ clearStorage } />
+						{/*<Button title="Clear Storage" onPress={ clearStorage } />*/}
 						<Button title="Add to basket" onPress={ handleBasketAdd } />
 						<Button title="End Trip" onPress={ handleEnd } />
 						<TextInput
@@ -160,6 +138,8 @@ export default function Forage({navigation}){
 						<EndTripModal
 							navigation={ navigation }
 							isConnected={ isConnected }
+							area={ area }
+							reset={ cleanUp }
 							endModalVisible={ endModalVisible }
 							setEndModalVisible= { setEndModalVisible }
 						/>
