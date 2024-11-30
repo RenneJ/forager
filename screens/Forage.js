@@ -11,6 +11,7 @@ import AddedModal from "../components/AddedModal";
 
 export default function Forage({navigation}){
 	const [area, setArea] = useState("");
+	const [id, setId] = useState(null);
 	const [warning, setWarning] = useState("");
 	const [started, setStarted] = useState(false);
 	const [basket, setBasket] = useState([]); // items that user collects during their trip

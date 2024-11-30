@@ -6,25 +6,26 @@ import styles from "../styles";
 
 export default function CollectionListItem(props){
 	const showLocations = () => {
-		console.log("cli", 9)
+		console.log("cli", 100101)
 	};
+	console.log(props.trip)
 
 	return (
-		<Pressable
-			style={ styles.pressableListItem }
-			onPress={ showLocations }
-		>
-			<Text style={ styles.tripLabel }>{ props.trip.time }: { props.trip.area }</Text>
-			<View style={ styles.tripBasketContent }>
-				{ props.trip.basket.map(basketItem =>
-					<Text
-						key={basketItem.id}
-						style={ styles.basketText}
-					>
-						{ basketItem.name }
-					</Text>
-				)}
-			</View>
-		</Pressable>
+				<Pressable
+					style={styles.pressableListItem}
+					onPress={showLocations}
+				>
+					<Text style={styles.tripLabel}>{props.trip.time}: {props.trip.area}</Text>
+					<View style={styles.tripBasketContent}>
+					{ props.trip.basket.map(basketItem =>
+						<Text
+							key={ basketItem.id }
+							style={styles.basketText}
+						>
+							{basketItem.name}
+						</Text>
+					)}
+					</View>
+				</Pressable>
 	)
 }

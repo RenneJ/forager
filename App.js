@@ -3,7 +3,7 @@ import { app } from "./firebaseconfig";
 import { useReducer, useMemo, useEffect } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { AuthContext } from "./utils/context";
-import { newUser, logOut, saveToken } from "./utils/authentication";
+import { newUser, logOut } from "./utils/authentication";
 import CustomDrawer from "./components/CustomDrawer";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 

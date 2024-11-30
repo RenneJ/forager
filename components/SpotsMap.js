@@ -5,7 +5,8 @@ import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
 import { storeBasket, storeArea, clear, isStarted } from "../utils/localstorage";
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
-
+// THIS IS COMPONENT OF COLLECTIONS
+// SHOWING PRESSED TRIP'S SPOTS AND LABELS
 export default function SpotMap(props){
 	return(
 		<View>
