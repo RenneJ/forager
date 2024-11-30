@@ -1,8 +1,10 @@
 import { auth, app, storage } from "../firebaseconfig";
 
 
-// gets object, stores string
+// gets list(object), stores string
 export const storeBasket = async (key, value) => {
+	// assign id for collection listing
+	value.forEach(item => !item.id && (item.id = value.length));
 		await storage.setItem(key, JSON.stringify(value))
 			.catch((error) => {
 				console.log(error);

@@ -93,10 +93,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
-  collectionList: {
-  	//flex: 0.8,
-    backgroundColor: "red",
-  },
   inputContainer: {
 
   },
@@ -104,6 +100,26 @@ const styles = StyleSheet.create({
   	flex: 0.6,
 	  justifyContent: 'center',
 	  alignItems: 'center',
+  },
+  pressableListItem: {
+  	backgroundColor: "#dfebdf",
+  	width: Dimensions.get('window').width *0.95,
+   	padding: 10,
+  	borderStyle: "solid",
+		borderWidth: 1,
+		borderColor: "#215231",
+		borderRadius: 5,
+		elevation: 10,	/* Android only */
+  },
+  tripLabel: {
+		fontSize: 18,
+		color: "#1f471f",
+  },
+  tripBasketContent: {
+  	flex: 1,
+   	flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
   },
 })
 

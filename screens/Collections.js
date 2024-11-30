@@ -4,7 +4,7 @@ import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database'
 import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
 import EmptyCollection from "../components/EmptyCollection";
-
+import CollectionListItem from "../components/CollectionListItem";
 const database = getDatabase(app);
 
 export default function Collections(){
@@ -35,17 +35,15 @@ export default function Collections(){
 	}, []);
 
 	return(
-		<View style={styles.container}>
-			<View style={styles.collectionList}>
+		<View style={ styles.container }>
 			<FlatList
-				ListEmptyComponent={EmptyCollection}
-				data={trips}
-				renderItem={({ item }) =>
-					<Text>{item.area}, {item.time}</Text>
-					/* Component for inspecting selected trip */
+				ItemSeparatorComponent={() => <View style={{height: 5}} />}
+				ListEmptyComponent={ EmptyCollection }
+				data={ trips }
+				renderItem={ ({ item }) =>
+					<CollectionListItem trip={ item } />
 				}
 			/>
-			</View>
 		</View>
 	)
 }
