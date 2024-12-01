@@ -7,9 +7,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-	credentialInput: {
-		height: 40,
-	},
   drawer: {
 		backgroundColor: "#8ed4a5",
 
@@ -25,7 +22,12 @@ const styles = StyleSheet.create({
   warning: {
   	color: "red",
   },
-  accessLogo: {
+  logo: {
+ 		height: 150,
+  	width: 150,
+   	marginTop: 50
+  },
+  loadingLogo: {
   	height: 150,
    	width: 150,
   },
@@ -34,13 +36,20 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		margin: "auto"
   },
+  areaControls:{
+
+  },
   map: {
   	width: Dimensions.get('window').width * 1,
    	height: Dimensions.get('window').height * 0.5,
   },
   biggerMap: {
  		width: Dimensions.get('window').width * 1,
-  	height: Dimensions.get('window').height * 1,
+  	height: Dimensions.get('window').height * 0.8,
+  },
+  fullMap: {
+		width: Dimensions.get('window').width * 1,
+	 	height: Dimensions.get('window').height * 1,
   },
   listHeader: {
 
@@ -54,11 +63,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalView: {
-    margin: 20,
+  	position: "absolute",
+   	alignSelf:"center",
+    top: 300,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
+    padding: 20,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -78,15 +88,16 @@ const styles = StyleSheet.create({
   	backgroundColor: "#70db95",
   },
   button: {
-    borderRadius: 20,
+    borderRadius: 10,
     padding: 10,
     elevation: 2,
+    color: "#1f471f"
   },
   buttonOpen: {
     backgroundColor: '#F194FF',
   },
   buttonClose: {
-    backgroundColor: '#2196F3',
+    backgroundColor: "#1f471f",
   },
   textStyle: {
     color: 'white',
@@ -97,13 +108,42 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
-  inputContainer: {
-
+  credentialsContainer: {
+   	flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-end",
+    //width: Dimensions.get('window').width *0.95,
+  },
+	credentialInput: {
+		fontSize: 14,
+		paddingHorizontal: 15,
+		//alignSelf:"flex-start",
+		height: 40,
+		borderRadius: 10,
+		borderColor: "#dfebdf",
+		backgroundColor: "#dfebdf",
+		borderWidth: 2,
+		width: Dimensions.get('window').width *0.95,
+		marginTop: 30,
+	},
+	helperText:{
+		marginBottom: 20,
+	},
+  inputFields: {
+  	flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginBottom: 30,
+  },
+  buttonsContainer: {
+	  flex: 0.6,
+	  justifyContent: "flex-start",
+		width: Dimensions.get('window').width *0.95,
+		gap: 30,
+		paddingBot: 50,
   },
   topView: {
-  	flex: 0.6,
-	  justifyContent: 'center',
-	  alignItems: 'center',
+ 	position: "absolute",
   },
   pressableListItem: {
   	backgroundColor: "#dfebdf",
@@ -112,7 +152,7 @@ const styles = StyleSheet.create({
   	borderStyle: "solid",
 		borderWidth: 1,
 		borderColor: "#215231",
-		borderRadius: 5,
+		borderRadius: 10,
 		elevation: 10,	/* Android only */
   },
   tripLabel: {

@@ -47,7 +47,7 @@ export default function EndTripModal(props){
           	{uploading ?
 	         		<Image
 								source={require("../assets/logo.png")}
-								style={styles.accessLogo}
+								style={styles.loadingLogo}
 							 />
 						:
 							<View>

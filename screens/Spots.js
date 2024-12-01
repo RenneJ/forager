@@ -48,7 +48,7 @@ export default function Spots(){
 	return(
 		<View style={styles.container}>
 			<MapView
-				style={styles.biggerMap}
+				style={styles.fullMap}
 				initialRegion={{
 					latitude: 60.200692,
 					longitude: 24.934302,

@@ -24,8 +24,8 @@ export default function UserActionModal(props){
 }, [props.actionModalVisible]);
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={ styles.centeredView }>
+   /*  <SafeAreaProvider>
+      <SafeAreaView style={ styles.centeredView }>*/
         <Modal
           animationType="none"
           transparent={true}
@@ -33,13 +33,13 @@ export default function UserActionModal(props){
           onRequestClose={() => {
             props.setActionModalVisible(!props.actionModalVisible);
           }}>
-          <View style={ styles.topView }>
+
             <View style={ [styles.modalView, modalStyle ] }>
 							<Text>{ props.modalMessage }</Text>
             </View>
-          </View>
+
         </Modal>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    /*   </SafeAreaView>
+    </SafeAreaProvider>*/
   );
 };

@@ -117,16 +117,15 @@ export default function Forage({navigation}){
 
 	return(
     <KeyboardAvoidingView
-    		style={ styles.container }
+    	style={ styles.container }
       behavior={ 'padding' }
     >
+				{started === true ?
 			<ScrollView
 				showVerticalScrollIndicator={ false }
 			>
-				{started === true ?
-					<View>
+					<View style={styles.container}>
 						<SpotMarker basketItem={ basketItem } setBasketItem={ setBasketItem } />
-						{/*<Button title="Clear Storage" onPress={ clearStorage } />*/}
 						<Button title="Add to basket" onPress={ handleBasketAdd } />
 						<Button title="End Trip" onPress={ handleEnd } />
 						<TextInput
@@ -154,8 +153,9 @@ export default function Forage({navigation}){
 							setModalMessage={ setModalMessage }
 						/>
 					</View>
+			</ScrollView>
 					:
-					<View>
+					<View style={styles.areaControls}>
 						<TextInput
 							placeholder="Area"
 							value={ area }
@@ -165,7 +165,6 @@ export default function Forage({navigation}){
 						{ warning && <Text style={ styles.requiredField }>{ warning }</Text>}
 					</View> }
 
-			</ScrollView>
     </KeyboardAvoidingView>
 	)
 }

@@ -43,8 +43,10 @@ export default function CustomDrawer(props){
 		<SafeAreaProvider>
 		<NavigationContainer>
 			{props.state.userToken == null ? (
-				<Stack.Navigator initialRouteName="Signup">
-						{/*<Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>*/}
+				<Stack.Navigator
+					screenOptions={{ headerStyle: { backgroundColor: "#8ed4a5", elevation: 0, shadowOpacity: 0 } }}
+					initialRouteName="Signup"
+				>
 						<Stack.Screen name="Signup" component={Signup} />
 				</Stack.Navigator>
 			) : (
