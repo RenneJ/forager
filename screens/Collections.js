@@ -16,6 +16,7 @@ export default function Collections() {
 	const [trips, setTrips] = useState([]);
 	const [docs, setDocs] = useState({});
 	const [mapVisible, setMapVisible] = useState(false);
+	const [basket, setBasket] = useState([]);
 
 	useEffect(() => {
 		if (auth) {
@@ -29,6 +30,8 @@ export default function Collections() {
 		}
 	}, []);
 
+	// Couldn't figure out how to set data from utils/cloudstorage.js library
+	// Probably some async issue...
 	const handleFetch = () => {
 		const itemsRef = ref(database, "/collection/" + auth.currentUser.uid);
 			onValue(itemsRef, (snapshot) => {
@@ -59,14 +62,23 @@ export default function Collections() {
 	return (
 		< View style = { styles.container } >
 			{ mapVisible ?
-				<SpotsMap />
+				<SpotsMap
+					setMapVisible={ setMapVisible }
+					basket={ basket }
+					setBasket={ setBasket }
+				/>
 			:
 					<FlatList
 						ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
 						ListEmptyComponent={ EmptyCollection }
 						data={ trips }
 						renderItem={({ item }) =>
-							<CollectionListItem trip={ item } setMapVisible={ setMapVisible } />
+							<CollectionListItem
+								trip={ item }
+								setMapVisible={ setMapVisible }
+								basket={ basket }
+								setBasket={ setBasket }
+							/>
 						}
 					/>
 			}

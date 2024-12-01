@@ -35,8 +35,12 @@ const styles = StyleSheet.create({
 		margin: "auto"
   },
   map: {
-  	width: Dimensions.get('window').width * 0.9,
+  	width: Dimensions.get('window').width * 1,
    	height: Dimensions.get('window').height * 0.5,
+  },
+  biggerMap: {
+ 		width: Dimensions.get('window').width * 1,
+  	height: Dimensions.get('window').height * 0.8,
   },
   listHeader: {
 
