@@ -2,29 +2,34 @@ import React, {useState, useEffect} from 'react';
 import {Alert, Modal, Image, Text, Pressable, View} from 'react-native';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { storeInCloud } from '../utils/cloudstorage';
+import UserActionModal from './UserActionModal';
 import styles from "../styles";
 
+// Pop-up for trip end controls, mainly to diminish occurrence of accidental presses.
 export default function EndTripModal(props){
 	const [uploading, setUploading] = useState(false);
 
 	const handleCloudSave = async () => {
-		setUploading(true);
 		try {
-			storeInCloud();
+			await storeInCloud();
+			setUploading(true);
 		} catch(error){
+			props.setModalStyle("error");
+			props.setModalMessage(error.message)
+			props.setActionModalVisible(true);
 		}
 	}
 
 	useEffect(() => {
-  if (uploading) {
-    setTimeout(() => {
-    	setUploading(false);
-			props.navigation.navigate("Collections");
-			props.setEndModalVisible(false);
-			props.reset();
-  }, 1500);
-  }
-}, [uploading]);
+	  if (uploading) {
+	    setTimeout(() => {
+	    	setUploading(false);
+				props.navigation.navigate("Collections");
+				props.setEndModalVisible(false);
+				props.reset();
+	  }, 1500);
+	  }
+	}, [uploading]);
 
   return (
     <SafeAreaProvider>

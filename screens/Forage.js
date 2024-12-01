@@ -7,7 +7,7 @@ import { storeBasket, storeArea, removeItems, isStarted, parseStoredValue, fetch
 import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
 import SpotMarker from "../components/SpotMarker";
 import EndTripModal from "../components/EndTripModal";
-import AddedModal from "../components/AddedModal";
+import UserActionModal from "../components/UserActionModal";
 
 export default function Forage({navigation}){
 	const [area, setArea] = useState("");
@@ -15,7 +15,7 @@ export default function Forage({navigation}){
 	const [started, setStarted] = useState(false);
 	const [basket, setBasket] = useState([]); // items that user collects during their trip
 	const [endModalVisible, setEndModalVisible] = useState(false);
-	const [addModalVisible, setAddModalVisible] = useState(false);
+	const [actionModalVisible, setActionModalVisible] = useState(false);
 	const [modalMessage, setModalMessage] = useState("");
 	const [modalStyle, setModalStyle] = useState("");
 	const [isConnected, setIsConnected] = useState(null)
@@ -27,14 +27,14 @@ export default function Forage({navigation}){
 
 	const cleanUp = () => {
 		removeItems(["basket", "area"])
-		setBasket([]);
-		setStarted(false);
 		setArea("");
+		setBasket([]);
 		setBasketItem({
 			name: null,
 			latitude: null,
 			longitude: null
 		});
+		setStarted(false);
 	}
 
 	const handleBasketAdd = () => {
@@ -43,7 +43,7 @@ export default function Forage({navigation}){
 			// Notify user of erroneous input
 			setModalStyle("warning");
 			setModalMessage("Input name and pin location.");
-			setAddModalVisible(true);
+			setActionModalVisible(true);
 		} else {
 			setBasket([...basket, basketItem])
 		}
@@ -56,19 +56,18 @@ export default function Forage({navigation}){
 		} else {
 			try {
 				storeBasket("basket", basket)
-					.then(setModalMessage(`${basketItem.name} and its location added to basket.`))
-					.then(setModalStyle("success"))
-					.catch(error => console.log("f65err",error.message))
-			} catch (error) {
-				setModalMessage(error);
-				setModalStyle("error");
-			} finally {
+				setModalMessage(`${basketItem.name} and its location added to basket.`);
+				setModalStyle("success");
 				setBasketItem({
 					name: null,
 					latitude: null,
 					longitude: null
 				});
-				setAddModalVisible(true);
+			} catch (error) {
+				setModalMessage(error);
+				setModalStyle("error");
+			} finally {
+				setActionModalVisible(true);
 			}
 		}
 	}, [basket])
@@ -141,13 +140,18 @@ export default function Forage({navigation}){
 							area={ area }
 							reset={ cleanUp }
 							endModalVisible={ endModalVisible }
-							setEndModalVisible= { setEndModalVisible }
+							setEndModalVisible={ setEndModalVisible }
+							setActionModalVisible={ setActionModalVisible }
+							setModalStyle={ setModalStyle }
+							setModalMessage={ setModalMessage }
 						/>
-						<AddedModal
-							addModalVisible={ addModalVisible }
-							setAddModalVisible= { setAddModalVisible }
+						<UserActionModal
+							actionModalVisible={ actionModalVisible }
+							setActionModalVisible= { setActionModalVisible }
 							modalStyle={ modalStyle }
+							setModalStyle={ setModalStyle }
 							modalMessage={ modalMessage }
+							setModalMessage={ setModalMessage }
 						/>
 					</View>
 					:
