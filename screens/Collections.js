@@ -6,7 +6,7 @@ import styles from "../styles";
 import EmptyCollection from "../components/EmptyCollection";
 import CollectionListItem from "../components/CollectionListItem";
 import SpotsMap from "../components/SpotsMap";
-import { fetchFromCloud } from "../utils/cloudstorage";
+
 const database = getDatabase(app);
 
 export default function Collections() {
@@ -14,7 +14,7 @@ export default function Collections() {
 	// TODO: list previous trips (sort by time: desc)
 	// TODO: "Go Forage" -> Forage
 	const [trips, setTrips] = useState([]);
-	const [docs, setDocs] = useState({});
+	const [docs, setDocs] = useState([]);
 	const [mapVisible, setMapVisible] = useState(false);
 	const [basket, setBasket] = useState([]);
 

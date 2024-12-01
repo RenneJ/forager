@@ -48,7 +48,11 @@ export default function CustomDrawer(props){
 						<Stack.Screen name="Signup" component={Signup} />
 				</Stack.Navigator>
 			) : (
-				<Drawer.Navigator screenOptions={{ headerStyle: { backgroundColor: "#8ed4a5"} }} initialRouteName="Collections" drawerContent={props => <CustomDrawerContent {...props} />}>
+				<Drawer.Navigator
+					screenOptions={{ headerStyle: { backgroundColor: "#8ed4a5"} }}
+					initialRouteName="Collections"
+					drawerContent={props => <CustomDrawerContent {...props} />}
+				>
 					<Drawer.Screen name="Collections" component={Collections} options={styles.drawerItem}/>
 					<Drawer.Screen name="Spots" component={Spots} options={styles.drawerItem}/>
 					<Drawer.Screen name="Forage" component={Forage} options={styles.drawerItem} />
