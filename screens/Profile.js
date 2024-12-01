@@ -1,10 +1,11 @@
 import { View, Text } from "react-native";
+import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
 
-function Profile({navigation}){
+function Profile(){
 	return(
-		<View>
-			<Text>PROFILE PAGE</Text>
+		<View style={styles.container}>
+			<Text>Email: { auth.currentUser.email }</Text>
 		</View>
 	)
 }

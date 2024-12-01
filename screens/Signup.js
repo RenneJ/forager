@@ -1,12 +1,14 @@
-import { View, Text, TextInput, Button } from "react-native";
-import { useState, useContext }  from "react";
+import { View, Text, TextInput, Button, Image } from "react-native";
+import { useState, useContext, useEffect }  from "react";
 import { auth, storage, secureStore } from "../firebaseconfig";
-import { newUser, logOut } from "../utils/authentication";
+import { newUser, logOut, logIn } from "../utils/authentication";
 import {isValidEmail, isValidPassword} from "../utils/validation";
 import styles from "../styles";
 import { AuthContext } from "../utils/context";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-export default function Signup({navigation}){
+export default function Signup(){
+	const [loading, setLoading] = useState(true);
 	const [email, setEmail] = useState({
 		email: "",
 		alert: false
@@ -15,17 +17,17 @@ export default function Signup({navigation}){
 		password: "",
 		alert: false,
 	});
+	const { signUp, signIn } = useContext(AuthContext);
 
-	const { signUp } = useContext(AuthContext);
+	onAuthStateChanged(auth, async (user) => {
+    setLoading(false)
+  });
+
 	const handleSignUp = async (email, password) => {
-		//TODO: why not 1st click working??, indicate async operation is taking place
-		//validateCreds();
 		if (isValidEmail(email.email) && isValidPassword(password.password)) {
 			// Successful sign up also logs new user in
 			await signUp(email.email, password.password);
-			// redirect to forage view after successful login
 			if(auth.currentUser){
-				//navigation.navigate("Forage")
 			}
 		}
 		if(!isValidEmail(email.email)) {
@@ -35,49 +37,60 @@ export default function Signup({navigation}){
 			setPassword({ ...password, alert: true });
 		}
 	}
-	const handleLogOut = async () => {
-		await logOut()
-			.then(console.log("sign41",await secureStore.getItemAsync("userToken")))
-			.catch((error) => {
-				console.log("sign43", error)
-			})
+
+	const handleLogIn = async (email, password) => {
+		try {
+			await signIn(email.email, password.password)
+		} catch(error){
+			console.log("su48", error);
+		}
 	}
+
 	return(
 		<View style={styles.container}>
-			<View>
-				<Text></Text>
-			</View>
-			<TextInput style={ styles.credentialInput}
-				placeholder={"Email"}
-				keyboardType={"email-address"}
-				autoCapitalize={"none"}
-				value={email}
-				onChangeText={text => setEmail({...email, email: text, alert: false})}
-			/>
-			{email.alert &&
-				<View style={styles.warning}>
-					<Text style={styles.warning}>"{ email.email }" is not a valid email.</Text>
+			{loading ?
+				<Image
+					source={require("../assets/logo.png")}
+					style={styles.accessLogo}
+				/>
+				:
+				<View>
+					{}
+					<Text></Text>
+					<TextInput style={styles.credentialInput}
+						placeholder={"Email"}
+						keyboardType={"email-address"}
+						autoCapitalize={"none"}
+						value={email}
+						onChangeText={text => setEmail({ ...email, email: text, alert: false })}
+					/>
+					{email.alert &&
+						<View style={styles.warning}>
+							<Text style={styles.warning}>"{email.email}" is not a valid email.</Text>
+						</View>
+					}
+					<TextInput style={styles.credentialInput}
+						secureTextEntry={true}
+						placeholder={"Password"}
+						value={password}
+						onChangeText={text => setPassword({ ...password, password: text, alert: false })}
+					/>
+					{password.alert &&
+						<View style={styles.warning}>
+							<Text style={styles.warning}>Invalid password.</Text>
+						</View>
+					}
+					<Button
+						title={"Log in"}
+						onPress={() => handleLogIn(email, password)}
+					/>
+					<Text>or</Text>
+					<Button
+						title={"Sign up"}
+						onPress={() => handleSignUp(email, password)}
+					/>
 				</View>
 			}
-			<TextInput style={ styles.credentialInput}
-				secureTextEntry={ true }
-				placeholder={"Password"}
-				value={password}
-				onChangeText={text => setPassword({...password, password: text, alert: false})}
-			/>
-			{password.alert &&
-				<View style={styles.warning}>
-					<Text style={styles.warning}>Invalid password.</Text>
-				</View>
-			}
-			<Button
-				title={"Sign up"}
-				onPress={() => handleSignUp(email, password)}
-			/>
-			<Button
-				title={"Log out"}
-				onPress={() => handleLogOut()}
-			/>
 		</View>
 	)
 }

@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#8ed4a5',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
   },
 	credentialInput: {
 		height: 40,
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   biggerMap: {
  		width: Dimensions.get('window').width * 1,
-  	height: Dimensions.get('window').height * 0.8,
+  	height: Dimensions.get('window').height * 1,
   },
   listHeader: {
 
