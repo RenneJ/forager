@@ -23,9 +23,10 @@ const styles = StyleSheet.create({
   	color: "red",
   },
   logo: {
+  	position: "absolute",
  		height: 150,
   	width: 150,
-   	marginTop: 50
+  	top: 120,
   },
   loadingLogo: {
   	height: 150,
@@ -37,11 +38,30 @@ const styles = StyleSheet.create({
 		margin: "auto"
   },
   areaControls:{
-
+  	flex: 1,
+   	justifyContent: "center",
+    gap: 20
+  },
+  forageContainer:{
+ 		flex: 1,
+    alignItems: "center",
+    justifyContent:"center",
+    gap: 20,
+    paddingBottom:20,
+  },
+  forageControls:{
+		alignItems: "center",
+		gap: 20
+  },
+  mapContainer:{
+  	flex:1,
+   	justifyContent: "flex-end",
   },
   map: {
   	width: Dimensions.get('window').width * 1,
-   	height: Dimensions.get('window').height * 0.5,
+   	//height: Dimensions.get('window').height * 0.5,
+    height: "100%",
+  //width: 200
   },
   biggerMap: {
  		width: Dimensions.get('window').width * 1,
@@ -58,15 +78,16 @@ const styles = StyleSheet.create({
 
   },
   centeredView: {
-    flex: 1,
+    flex: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalView: {
   	position: "absolute",
+   	flex: 1,
    	alignSelf:"center",
     top: 300,
-    backgroundColor: 'white',
+    backgroundColor: "#dfebdf",
     borderRadius: 20,
     padding: 20,
     shadowColor: '#000',
@@ -77,21 +98,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    gap: 10,
   },
   modalWarning: {
-  	backgroundColor: "yellow",
+  	backgroundColor: "#eb9360",
   },
   modalError: {
-
+  	backgroundColor: "#eb9360",
   },
   modalSuccess: {
-  	backgroundColor: "#70db95",
+  	backgroundColor: "#dfebdf",
   },
   button: {
     borderRadius: 10,
     padding: 10,
     elevation: 2,
-    color: "#1f471f"
+    color: "#1f471f",
+		minWidth: "95%"
   },
   buttonOpen: {
     backgroundColor: '#F194FF',
@@ -114,7 +137,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     //width: Dimensions.get('window').width *0.95,
   },
-	credentialInput: {
+	inputField: {
 		fontSize: 14,
 		paddingHorizontal: 15,
 		//alignSelf:"flex-start",
@@ -123,31 +146,31 @@ const styles = StyleSheet.create({
 		borderColor: "#dfebdf",
 		backgroundColor: "#dfebdf",
 		borderWidth: 2,
-		width: Dimensions.get('window').width *0.95,
-		marginTop: 30,
+		width: Dimensions.get('window').width * 0.95,
+		//marginTop: 30,
 	},
 	helperText:{
 		marginBottom: 20,
 	},
   inputFields: {
-  	flex: 1,
+  	flex: 4,
     justifyContent: "flex-end",
     alignItems: "center",
     marginBottom: 30,
+    gap: 20
   },
   buttonsContainer: {
-	  flex: 0.6,
-	  justifyContent: "flex-start",
-		width: Dimensions.get('window').width *0.95,
+	  flex: 1,
+	  justifyContent: "center",
+		width: Dimensions.get('window').width * 0.95,
 		gap: 30,
-		paddingBot: 50,
   },
   topView: {
  	position: "absolute",
   },
   pressableListItem: {
   	backgroundColor: "#dfebdf",
-  	width: Dimensions.get('window').width *0.95,
+  	width: Dimensions.get('window').width * 0.95,
    	padding: 10,
   	borderStyle: "solid",
 		borderWidth: 1,

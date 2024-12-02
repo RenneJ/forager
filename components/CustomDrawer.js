@@ -23,7 +23,7 @@ function CustomDrawerContent(props) {
 	const handleLogOut = () => {
 		signOut();
 	}
-	// TODO: Loading indicator, isLoading alrdy passed in props
+
   return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: "#8ed4a5" }} forceInset={{ top: "always", horizontal: "never" }}>
 		<DrawerContentScrollView contentContainerStyle={styles.drawer }  {...props}>
@@ -44,7 +44,7 @@ export default function CustomDrawer(props){
 		<NavigationContainer>
 			{props.state.userToken == null ? (
 				<Stack.Navigator
-					screenOptions={{ headerStyle: { backgroundColor: "#8ed4a5", elevation: 0, shadowOpacity: 0 } }}
+					screenOptions={{ headerShown: false }}
 					initialRouteName="Signup"
 				>
 						<Stack.Screen name="Signup" component={Signup} />

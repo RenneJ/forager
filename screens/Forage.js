@@ -1,4 +1,4 @@
-import { View, Text, Button, TextInput, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { View, Text, TextInput, KeyboardAvoidingView, Pressable, ScrollView } from "react-native";
 import { useState, useEffect, useRef } from 'react';
 import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
@@ -11,7 +11,6 @@ import UserActionModal from "../components/UserActionModal";
 
 export default function Forage({navigation}){
 	const [area, setArea] = useState("");
-	const [warning, setWarning] = useState("");
 	const [started, setStarted] = useState(false);
 	const [basket, setBasket] = useState([]); // items that user collects during their trip
 	const [endModalVisible, setEndModalVisible] = useState(false);
@@ -74,7 +73,9 @@ export default function Forage({navigation}){
 
 	const handleStart = () => {
 		if (!area) {
-			setWarning("Area is required.")
+			setModalMessage("Area is required.");
+			setModalStyle("warning");
+			setActionModalVisible(true);
 		} else {
 			setItem("area", area);
 			setStarted(true);
@@ -117,22 +118,47 @@ export default function Forage({navigation}){
 
 	return(
     <KeyboardAvoidingView
-    	style={ styles.container }
+    	style={styles.container}
       behavior={ 'padding' }
     >
 				{started === true ?
-			<ScrollView
-				showVerticalScrollIndicator={ false }
-			>
-					<View style={styles.container}>
-						<SpotMarker basketItem={ basketItem } setBasketItem={ setBasketItem } />
-						<Button title="Add to basket" onPress={ handleBasketAdd } />
-						<Button title="End Trip" onPress={ handleEnd } />
+
+					<View style={styles.forageContainer}>
+						<UserActionModal
+							actionModalVisible={ actionModalVisible }
+							setActionModalVisible= { setActionModalVisible }
+							modalStyle={ modalStyle }
+							setModalStyle={ setModalStyle }
+							modalMessage={ modalMessage }
+							setModalMessage={ setModalMessage }
+						/>
+						<View style={styles.mapContainer}>
+							<SpotMarker basketItem={ basketItem } setBasketItem={ setBasketItem } />
+						</View>
+						<View style={styles.forageControls}>
 						<TextInput
+							style={styles.inputField}
 							placeholder="Mushroom name"
 							value={ basketItem.name }
 							onChangeText={text => setBasketItem({ ...basketItem, name:text })}
 						/>
+						<Pressable
+							style={[styles.button, styles.buttonClose]}
+							onPress={ handleBasketAdd }
+						>
+							<Text style={styles.textStyle}>
+								Add to basket
+							</Text>
+						</Pressable>
+						<Pressable
+							style={[styles.button, styles.buttonClose]}
+							onPress={ handleEnd }
+						>
+							<Text style={styles.textStyle}>
+								End Trip
+							</Text>
+						</Pressable>
+						</View>
 						<EndTripModal
 							navigation={ navigation }
 							isConnected={ isConnected }
@@ -144,6 +170,10 @@ export default function Forage({navigation}){
 							setModalStyle={ setModalStyle }
 							setModalMessage={ setModalMessage }
 						/>
+					</View>
+
+					:
+					<View style={styles.areaControls}>
 						<UserActionModal
 							actionModalVisible={ actionModalVisible }
 							setActionModalVisible= { setActionModalVisible }
@@ -152,18 +182,22 @@ export default function Forage({navigation}){
 							modalMessage={ modalMessage }
 							setModalMessage={ setModalMessage }
 						/>
-					</View>
-			</ScrollView>
-					:
-					<View style={styles.areaControls}>
 						<TextInput
+							style={styles.inputField}
 							placeholder="Area"
 							value={ area }
 							onChangeText={text => setArea(text)}
 						/>
-						<Button title="Start Foraging" onPress={ handleStart } />
-						{ warning && <Text style={ styles.requiredField }>{ warning }</Text>}
-					</View> }
+						<Pressable
+							style={[styles.button, styles.buttonClose]}
+							onPress={ handleStart }
+						>
+							<Text style={styles.textStyle}>
+								Start Foraging
+							</Text>
+						</Pressable>
+					</View>
+				}
 
     </KeyboardAvoidingView>
 	)

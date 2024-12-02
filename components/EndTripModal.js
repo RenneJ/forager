@@ -32,8 +32,8 @@ export default function EndTripModal(props){
 	}, [uploading]);
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.centeredView}>
+    /*<SafeAreaProvider>
+      <SafeAreaView style={styles.centeredView}>*/
         <Modal
           animationType="none"
           transparent={true}
@@ -50,7 +50,7 @@ export default function EndTripModal(props){
 								style={styles.loadingLogo}
 							 />
 						:
-							<View>
+							<View style={styles.modalView}>
 									<Text style={styles.modalText}>End current trip: { props.area }</Text>
               { props.isConnected ?
 	              <Pressable
@@ -76,7 +76,7 @@ export default function EndTripModal(props){
             </View>
           </View>
         </Modal>
-      </SafeAreaView>
-    </SafeAreaProvider>
+     /*</SafeAreaView>
+    </SafeAreaProvider>*/
   );
 };

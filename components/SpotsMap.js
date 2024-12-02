@@ -14,7 +14,7 @@ export default function SpotsMap(props){
 	}
 
 	return(
-		<View style={styles.container}>
+		<View style={{flex: 1, gap: 30}}>
 			<MapView
 				style={styles.biggerMap}
 				initialRegion={{
@@ -33,11 +33,11 @@ export default function SpotsMap(props){
 				)}
 			</MapView>
 			<Pressable
-				style={{backgroundColor: "green", width: 100, height: 50, marginTop: 20}}
+				style={[styles.button, styles.buttonClose]}
 				onPress={ handleBack }
 			>
-				<Text>
-					BACK
+				<Text style={styles.textStyle}>
+					Back to list
 				</Text>
 			</Pressable>
 		</View>

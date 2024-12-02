@@ -80,14 +80,14 @@ export default function Signup(){
 					/>}
 				<View style={ styles.credentialsContainer }>
 					<View style={styles.inputFields}>
-					<TextInput style={styles.credentialInput}
+					<TextInput style={styles.inputField}
 						placeholder={"Email"}
 						keyboardType={"email-address"}
 						autoCapitalize={"none"}
 						value={email}
 						onChangeText={text => setEmail(text)}
 					/>
-					<TextInput style={styles.credentialInput}
+					<TextInput style={styles.inputField}
 						secureTextEntry={true}
 						placeholder={"Password"}
 						value={password}
