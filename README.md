@@ -1,7 +1,10 @@
 # FORAGER
+
 ## Keep your foraging spots safe!
 
 Forager is a React Native (javascript) + Firebase app made as a final project for Haaga-Helia UAS [course on Mobile Programming](https://haagahelia.github.io/mobilecourse/).
+
+Offline usage is important in this app. Foraging data is stored locally in React Native Async Storage.
 
 ### About structure
 
