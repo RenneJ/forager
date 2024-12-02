@@ -50,7 +50,7 @@ export default function EndTripModal(props){
 								style={styles.loadingLogo}
 							 />
 						:
-							<View style={styles.modalView}>
+							<View>
 									<Text style={styles.modalText}>End current trip: { props.area }</Text>
               { props.isConnected ?
 	              <Pressable
@@ -63,11 +63,11 @@ export default function EndTripModal(props){
 	              <Pressable
 	                style={[styles.button, styles.buttonClose]}
 	                onPress={() => props.setEndModalVisible(!props.endModalVisible)}>
-	                 <Text style={styles.textStyle}>NO conn</Text>
+	                 <Text style={styles.textStyle}>No connection</Text>
 	              </Pressable>
               }
               <Pressable
-                style={[styles.button, styles.buttonClose]}
+                style={[styles.button, styles.buttonCancel]}
                 onPress={() => props.setEndModalVisible(!props.endModalVisible)}>
                 <Text style={styles.textStyle}>Cancel</Text>
               </Pressable>

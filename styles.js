@@ -71,20 +71,13 @@ const styles = StyleSheet.create({
 		width: Dimensions.get('window').width * 1,
 	 	height: Dimensions.get('window').height * 1,
   },
-  listHeader: {
-
-  },
-  requiredField: {
-
-  },
   centeredView: {
-    flex: 0,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalView: {
   	position: "absolute",
-   	flex: 1,
    	alignSelf:"center",
     top: 300,
     backgroundColor: "#dfebdf",
@@ -116,11 +109,12 @@ const styles = StyleSheet.create({
     color: "#1f471f",
 		minWidth: "95%"
   },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
   buttonClose: {
     backgroundColor: "#1f471f",
+  },
+  buttonCancel:{
+  	marginTop: 10,
+  	backgroundColor: "#73706e",
   },
   textStyle: {
     color: 'white',
