@@ -1,6 +1,6 @@
-import { View, Text, Button, FlatList, ListEmptyComponent } from "react-native";
+import { View, FlatList } from "react-native";
 import { useState, useEffect } from 'react';
-import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
+import { getDatabase, ref, onValue } from 'firebase/database';
 import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
 import EmptyCollection from "../components/EmptyCollection";
@@ -10,9 +10,6 @@ import SpotsMap from "../components/SpotsMap";
 const database = getDatabase(app);
 
 export default function Collections() {
-	// TODO: if wifi do storeInCloud
-	// TODO: list previous trips (sort by time: desc)
-	// TODO: "Go Forage" -> Forage
 	const [trips, setTrips] = useState([]);
 	const [docs, setDocs] = useState([]);
 	const [mapVisible, setMapVisible] = useState(false);
@@ -23,9 +20,7 @@ export default function Collections() {
 			try {
 				handleFetch();
 			} catch (error) {
-				console.log("c29", error)
-			} finally {
-				console.log("c33", trips)
+				console.log(error)
 			}
 		}
 	}, []);
@@ -52,8 +47,6 @@ export default function Collections() {
 				let trip = { ...value, id: key }
 				helperList.push(trip);
 			}
-		} catch(error){
-
 		} finally{
 				setTrips(helperList)
 		}

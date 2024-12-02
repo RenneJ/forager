@@ -1,8 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {Alert, Modal, Image, Text, Pressable, View} from 'react-native';
-import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
+import { useState, useEffect } from 'react';
+import { Modal, Image, Text, Pressable, View } from 'react-native';
 import { storeInCloud } from '../utils/cloudstorage';
-import UserActionModal from './UserActionModal';
 import styles from "../styles";
 
 // Pop-up for trip end controls, mainly to diminish occurrence of accidental presses.
@@ -32,51 +30,49 @@ export default function EndTripModal(props){
 	}, [uploading]);
 
   return (
-    /*<SafeAreaProvider>
-      <SafeAreaView style={styles.centeredView}>*/
-        <Modal
-          animationType="none"
-          transparent={true}
-          visible={props.endModalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-            props.setEndModalVisible(!props.endModalVisible);
-          }}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-          	{uploading ?
-	         		<Image
-								source={require("../assets/logo.png")}
-								style={styles.loadingLogo}
-							 />
-						:
-							<View>
-									<Text style={styles.modalText}>End current trip: { props.area }</Text>
-              { props.isConnected ?
-	              <Pressable
-	                style={[styles.button, styles.buttonClose]}
-	                onPress={handleCloudSave}
-								>
-	                <Text style={styles.textStyle}>Save</Text>
-	              </Pressable>
-							:
-	              <Pressable
-	                style={[styles.button, styles.buttonClose]}
-	                onPress={() => props.setEndModalVisible(!props.endModalVisible)}>
-	                 <Text style={styles.textStyle}>No connection</Text>
-	              </Pressable>
-              }
-              <Pressable
-                style={[styles.button, styles.buttonCancel]}
-                onPress={() => props.setEndModalVisible(!props.endModalVisible)}>
-                <Text style={styles.textStyle}>Cancel</Text>
-              </Pressable>
-							</View>
-           }
-            </View>
-          </View>
-        </Modal>
-     /*</SafeAreaView>
-    </SafeAreaProvider>*/
+    <Modal
+      animationType="none"
+      transparent={true}
+      visible={props.endModalVisible}
+      onRequestClose={() => {
+        props.setEndModalVisible(!props.endModalVisible);
+      }}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+       	{uploading ?
+        	<Image
+						source={require("../assets/logo.png")}
+						style={styles.loadingLogo}
+					 />
+				:
+					<View>
+						<Text style={styles.modalText}>End current trip: { props.area }</Text>
+          { props.isConnected ?
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={handleCloudSave}
+						>
+              <Text style={styles.textStyle}>Save</Text>
+            </Pressable>
+					:
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => props.setEndModalVisible(!props.endModalVisible)}
+            >
+                <Text style={styles.textStyle}>No connection</Text>
+            </Pressable>
+          }
+          <Pressable
+            style={[styles.button, styles.buttonCancel]}
+            onPress={() => props.setEndModalVisible(!props.endModalVisible)}
+          >
+            <Text style={styles.textStyle}>Cancel</Text>
+          </Pressable>
+					</View>
+        }
+        </View>
+      </View>
+    </Modal>
   );
 };

@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import { auth, app } from "../firebaseconfig";
+import { auth } from "../firebaseconfig";
 import styles from "../styles";
 
 function Profile(){

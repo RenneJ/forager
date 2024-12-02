@@ -1,5 +1,4 @@
-import { auth, app, storage } from "../firebaseconfig";
-
+import { storage } from "../firebaseconfig";
 
 // gets list(object), stores string
 export const storeBasket = async (key, value) => {
@@ -9,7 +8,6 @@ export const storeBasket = async (key, value) => {
 			.catch((error) => {
 				console.log(error);
 			})
-		console.log("ls26", await storage.getItem("area"), "-----", await storage.getItem(key) )
 }
 
 // pointless wrapper
@@ -36,7 +34,6 @@ export const fetchItem = async (key) => {
 
 export const isStarted = async(key) => {
 	if (await storage.getItem(key)) {
-		console.log("ls44", await storage.getItem(key))
 		return true;
 	}
 	return false;
@@ -59,5 +56,4 @@ export const removeItems = (keys) => {
 	} catch(error) {
 			console.log(error)
 	}
-
 }

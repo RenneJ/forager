@@ -1,7 +1,7 @@
-import { View, Text, Button, FlatList, ListEmptyComponent } from "react-native";
+import { View } from "react-native";
 import MapView, { Marker } from 'react-native-maps';
 import { useState, useEffect } from 'react';
-import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
+import { getDatabase, ref, onValue } from 'firebase/database';
 import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
 
@@ -16,10 +16,7 @@ export default function Spots(){
 			try {
 				handleFetch();
 			} catch (error) {
-				console.log("s18", error)
-			} finally {
-				console.log("s20", trips)
-
+				console.log(error)
 			}
 		}
 	}, []);
@@ -30,7 +27,6 @@ export default function Spots(){
 			trip.basket.forEach(basketItem => list.push(basketItem))
 		});
 		setAllForagedItems(list);
-		console.log(list)
 	}, [trips])
 
 	const handleFetch = () => {

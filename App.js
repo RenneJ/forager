@@ -1,5 +1,3 @@
-// app needs to be imported first or at least before auth fro ./utils/authentication
-import { app } from "./firebaseconfig";
 import { useReducer, useMemo, useEffect } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { AuthContext } from "./utils/context";
@@ -69,7 +67,7 @@ export default function App() {
 			try {
 				logOut();
 			} catch(error){
-				console.log("app77", error)
+				console.log(error)
 			}
 			dispatch({ type: 'SIGN_OUT' });
 		},

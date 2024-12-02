@@ -1,10 +1,8 @@
-import { View, Text, TextInput, KeyboardAvoidingView, Pressable, ScrollView } from "react-native";
+import { View, Text, TextInput, KeyboardAvoidingView, Pressable } from "react-native";
 import { useState, useEffect, useRef } from 'react';
-import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
 import NetInfo from '@react-native-community/netinfo';
-import { storeBasket, storeArea, removeItems, isStarted, parseStoredValue, fetchItem, setItem } from "../utils/localstorage";
-import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
+import { storeBasket, removeItems, isStarted, parseStoredValue, fetchItem, setItem } from "../utils/localstorage";
 import SpotMarker from "../components/SpotMarker";
 import EndTripModal from "../components/EndTripModal";
 import UserActionModal from "../components/UserActionModal";
@@ -99,7 +97,7 @@ export default function Forage({navigation}){
 			getStoredBasket();
 			isStarted("area").then(resp => setStarted(resp));
 		} catch(error) {
-			console.log("f83",error)
+			console.log(error)
 		}
 	}, [])
 
@@ -121,21 +119,20 @@ export default function Forage({navigation}){
     	style={styles.container}
       behavior={ 'padding' }
     >
-				{started === true ?
-
-					<View style={styles.forageContainer}>
-						<UserActionModal
-							actionModalVisible={ actionModalVisible }
-							setActionModalVisible= { setActionModalVisible }
-							modalStyle={ modalStyle }
-							setModalStyle={ setModalStyle }
-							modalMessage={ modalMessage }
-							setModalMessage={ setModalMessage }
-						/>
-						<View style={styles.mapContainer}>
-							<SpotMarker basketItem={ basketItem } setBasketItem={ setBasketItem } />
-						</View>
-						<View style={styles.forageControls}>
+			{started === true ?
+				<View style={styles.forageContainer}>
+					<UserActionModal
+						actionModalVisible={ actionModalVisible }
+						setActionModalVisible= { setActionModalVisible }
+						modalStyle={ modalStyle }
+						setModalStyle={ setModalStyle }
+						modalMessage={ modalMessage }
+						setModalMessage={ setModalMessage }
+					/>
+					<View style={styles.mapContainer}>
+						<SpotMarker basketItem={ basketItem } setBasketItem={ setBasketItem } />
+					</View>
+					<View style={styles.forageControls}>
 						<TextInput
 							style={styles.inputField}
 							placeholder="Mushroom name"
@@ -158,47 +155,45 @@ export default function Forage({navigation}){
 								End Trip
 							</Text>
 						</Pressable>
-						</View>
-						<EndTripModal
-							navigation={ navigation }
-							isConnected={ isConnected }
-							area={ area }
-							reset={ cleanUp }
-							endModalVisible={ endModalVisible }
-							setEndModalVisible={ setEndModalVisible }
-							setActionModalVisible={ setActionModalVisible }
-							setModalStyle={ setModalStyle }
-							setModalMessage={ setModalMessage }
-						/>
 					</View>
-
-					:
-					<View style={styles.areaControls}>
-						<UserActionModal
-							actionModalVisible={ actionModalVisible }
-							setActionModalVisible= { setActionModalVisible }
-							modalStyle={ modalStyle }
-							setModalStyle={ setModalStyle }
-							modalMessage={ modalMessage }
-							setModalMessage={ setModalMessage }
-						/>
-						<TextInput
-							style={styles.inputField}
-							placeholder="Area"
-							value={ area }
-							onChangeText={text => setArea(text)}
-						/>
-						<Pressable
-							style={[styles.button, styles.buttonClose]}
-							onPress={ handleStart }
-						>
-							<Text style={styles.textStyle}>
-								Start Foraging
-							</Text>
-						</Pressable>
-					</View>
-				}
-
+					<EndTripModal
+						navigation={ navigation }
+						isConnected={ isConnected }
+						area={ area }
+						reset={ cleanUp }
+						endModalVisible={ endModalVisible }
+						setEndModalVisible={ setEndModalVisible }
+						setActionModalVisible={ setActionModalVisible }
+						setModalStyle={ setModalStyle }
+						setModalMessage={ setModalMessage }
+					/>
+				</View>
+				:
+				<View style={styles.areaControls}>
+					<UserActionModal
+						actionModalVisible={ actionModalVisible }
+						setActionModalVisible= { setActionModalVisible }
+						modalStyle={ modalStyle }
+						setModalStyle={ setModalStyle }
+						modalMessage={ modalMessage }
+						setModalMessage={ setModalMessage }
+					/>
+					<TextInput
+						style={styles.inputField}
+						placeholder="Area"
+						value={ area }
+						onChangeText={text => setArea(text)}
+					/>
+					<Pressable
+						style={[styles.button, styles.buttonClose]}
+						onPress={ handleStart }
+					>
+						<Text style={styles.textStyle}>
+							Start Foraging
+						</Text>
+					</Pressable>
+				</View>
+			}
     </KeyboardAvoidingView>
 	)
 }

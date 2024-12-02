@@ -1,10 +1,6 @@
-import { useState, useEffect } from 'react';
-import { View, Text, Button, TextInput, FlatList } from "react-native";
+import { View } from "react-native";
 import MapView, { Marker } from 'react-native-maps';
-import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
-import { storeBasket, storeArea, clear, isStarted } from "../utils/localstorage";
-import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
 
 export default function SpotMarker(props){
 	return(
@@ -18,13 +14,11 @@ export default function SpotMarker(props){
 					longitudeDelta: 0.0221,
 				}}
 				onPress={event => {
-					// Place marker here
 					props.setBasketItem({
 						...props.basketItem,
 						latitude: event.nativeEvent.coordinate.latitude,
 						longitude: event.nativeEvent.coordinate.longitude
 					});
-					console.log(props.basketItem)
 				}}
 			>
 				{props.basketItem.latitude &&

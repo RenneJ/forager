@@ -1,9 +1,6 @@
-import { useState, useEffect } from 'react';
-import NetInfo from '@react-native-community/netinfo';
 import { removeItems, parseStoredValue, fetchItem} from "../utils/localstorage";
-import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
+import { getDatabase, push, ref } from 'firebase/database';
 import { auth, app } from "../firebaseconfig";
-import styles from "../styles";
 
 const database = getDatabase(app);
 const now = new Date(Date.now());
@@ -25,6 +22,5 @@ export const storeInCloud = async () => {
 			throw new Error("Cannot save empty basket.")
 		}
 }
-
 // wanted to implement fetch function but couldn't figure out
 // how to return value to component...

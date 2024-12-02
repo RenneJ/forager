@@ -4,8 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { Text } from "react-native";
 import { useContext } from "react";
-import Access from "../screens/Access";
-import Login from '../screens/Login';
 import Collections from '../screens/Collections';
 import Forage from '../screens/Forage';
 import Profile from '../screens/Profile';
@@ -25,7 +23,10 @@ function CustomDrawerContent(props) {
 	}
 
   return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: "#8ed4a5" }} forceInset={{ top: "always", horizontal: "never" }}>
+		<SafeAreaView
+			style={{ flex: 1, backgroundColor: "#8ed4a5" }}
+			forceInset={{ top: "always", horizontal: "never" }}
+		>
 		<DrawerContentScrollView contentContainerStyle={styles.drawer }  {...props}>
 	    <DrawerItemList {...props} />
     </DrawerContentScrollView>

@@ -1,7 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {Alert, Modal, Image, Text, Pressable, View} from 'react-native';
-import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import { storeInCloud } from '../utils/cloudstorage';
+import { useEffect } from 'react';
+import {Modal, Text, View} from 'react-native';
 import styles from "../styles";
 
 // Generic message for user showing confirmation of action, a warning or an error.
@@ -24,22 +22,17 @@ export default function UserActionModal(props){
 }, [props.actionModalVisible]);
 
   return (
-   /*  <SafeAreaProvider>
-      <SafeAreaView style={ styles.centeredView }>*/
-        <Modal
-          animationType="none"
-          transparent={true}
-          visible={ props.actionModalVisible }
-          onRequestClose={() => {
-            props.setActionModalVisible(!props.actionModalVisible);
-          }}>
-
-            <View style={ [styles.modalView, modalStyle ] }>
-							<Text>{ props.modalMessage }</Text>
-            </View>
-
-        </Modal>
-    /*   </SafeAreaView>
-    </SafeAreaProvider>*/
+    <Modal
+      animationType="none"
+      transparent={true}
+      visible={ props.actionModalVisible }
+      onRequestClose={() => {
+        props.setActionModalVisible(!props.actionModalVisible);
+      }}
+    >
+        <View style={ [styles.modalView, modalStyle ] }>
+					<Text>{ props.modalMessage }</Text>
+        </View>
+    </Modal>
   );
 };

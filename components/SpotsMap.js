@@ -1,10 +1,7 @@
-import { useState, useEffect } from 'react';
-import { View, Text, Button, TextInput, Pressable } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import MapView, { Marker } from 'react-native-maps';
-import { auth, app } from "../firebaseconfig";
 import styles from "../styles";
-import { storeBasket, storeArea, clear, isStarted } from "../utils/localstorage";
-import { getDatabase, push, ref, onValue, remove, set } from 'firebase/database';
+
 // THIS IS COMPONENT OF COLLECTIONS
 // SHOWING PRESSED TRIP'S SPOTS AND LABELS
 export default function SpotsMap(props){

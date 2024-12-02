@@ -25,6 +25,6 @@ export const logOut = async () => {
 		await signOut(auth);
 		removeItems(["area", "basket", "time"]);
 	} catch(error){
-		console.log("ath35", error)// An error happened.
+		console.log(error)
 	}
 }
