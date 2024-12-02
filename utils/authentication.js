@@ -1,4 +1,5 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword,signOut } from "firebase/auth";
+import { removeItems } from "./localstorage";
 import { auth } from "../firebaseconfig";
 
 export const newUser = async (email, password) => {
@@ -21,7 +22,8 @@ export const logIn = async (email, password) => {
 
 export const logOut = async () => {
 	try{
-		await signOut(auth)
+		await signOut(auth);
+		removeItems(["area", "basket", "time"]);
 	} catch(error){
 		console.log("ath35", error)// An error happened.
 	}
